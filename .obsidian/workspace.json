@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Algebra/Матрицы (04.09).md",
+                "file": "Algebra/Важное.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Algebra/Матрицы (04.09).md",
+                "file": "Algebra/Важное.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Algebra/Матрицы (04.09).md",
+                "file": "Algebra/Важное.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Algebra/Матрицы (04.09).md"
+                "file": "Algebra/Важное.md"
               }
             }
           }
@@ -148,8 +148,8 @@
   },
   "active": "f59659cdac493bf8",
   "lastOpenFiles": [
-    "Algebra/Важное.md",
     "Algebra/Матрицы (04.09).md",
+    "Algebra/Важное.md",
     "Test/j.py",
     "Test/j.cpp",
     "Test/j",
