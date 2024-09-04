@@ -11,12 +11,8 @@
             "id": "f59659cdac493bf8",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Algebra/Важное.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -85,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Algebra/Важное.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Algebra/Важное.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -124,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Algebra/Важное.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -148,17 +140,20 @@
   },
   "active": "f59659cdac493bf8",
   "lastOpenFiles": [
+    "test/j.py",
+    "test/j.cpp",
+    "test/h.cpp",
+    "test/f.cpp",
+    "test/e.cpp",
+    "test/d.cpp",
+    "test/c.py",
+    "test/c.cpp",
+    "test/b.cpp",
+    "test/a.cpp",
+    "test",
     "Algebra/Матрицы (04.09).md",
-    "Algebra/Важное.md",
-    "Test/j.py",
-    "Test/j.cpp",
-    "Test/j",
-    "Test/h.cpp",
-    "Test/h",
-    "Test/f.cpp",
-    "Test/f",
-    "Test/e.cpp",
-    "Test/e",
-    "Test/d.cpp"
+    "algebra/Матрицы (04.09).md",
+    "algebra/Важное.md",
+    "Algebra/Важное.md"
   ]
 }

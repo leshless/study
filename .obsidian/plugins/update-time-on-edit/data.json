@@ -7,8 +7,5 @@
   "ignoreGlobalFolder": [],
   "ignoreCreatedFolder": [],
   "enableExperimentalHash": false,
-  "fileHashMap": {
-    "Algebra/Матрицы (04.09).md": "9edf992a4ae52914b29a2f76f213b4db3e578ecf950e7c3e2bca4dd774960034",
-    "Algebra/Важное.md": "55c478bf06bff04cc7aeb596e98d9d6ff8f050d5d2ea35849774a27ac0298974"
-  }
+  "fileHashMap": {}
 }
