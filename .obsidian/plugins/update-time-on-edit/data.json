@@ -1,0 +1,14 @@
+{
+  "dateFormat": "yyyy-MM-dd'T'HH:mm",
+  "enableCreateTime": true,
+  "headerUpdated": "updated",
+  "headerCreated": "created",
+  "minMinutesBetweenSaves": 1,
+  "ignoreGlobalFolder": [],
+  "ignoreCreatedFolder": [],
+  "enableExperimentalHash": false,
+  "fileHashMap": {
+    "Algebra/Матрицы (04.09).md": "9edf992a4ae52914b29a2f76f213b4db3e578ecf950e7c3e2bca4dd774960034",
+    "Algebra/Важное.md": "79f679d348ac12b3484bfa29228e0f28e71547639bc80aefa31fca4611eaa9f6"
+  }
+}

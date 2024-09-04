@@ -1,18 +1,22 @@
 {
   "main": {
-    "id": "82b0ac3ac1780302",
+    "id": "b566e3aae9e33f3a",
     "type": "split",
     "children": [
       {
-        "id": "502856fbc6a6f446",
+        "id": "2b60e640b67e10b4",
         "type": "tabs",
         "children": [
           {
-            "id": "b44ebac8738c117d",
+            "id": "f59659cdac493bf8",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "Algebra/Матрицы (04.09).md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -21,15 +25,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "1e93e18e678edd1b",
+    "id": "fa0eba65b3d97eb1",
     "type": "split",
     "children": [
       {
-        "id": "48274d39e18690d6",
+        "id": "44e503d5b6f4f04a",
         "type": "tabs",
         "children": [
           {
-            "id": "f11b0fbb499d1a57",
+            "id": "f146d1b07d33be8a",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -39,7 +43,7 @@
             }
           },
           {
-            "id": "d5f4a6283ed505f5",
+            "id": "7a9e03fc9764f827",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -54,7 +58,7 @@
             }
           },
           {
-            "id": "c689fb599a1ada06",
+            "id": "8b6b46677a74888f",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -68,19 +72,20 @@
     "width": 300
   },
   "right": {
-    "id": "f74b23be9ab6f659",
+    "id": "043a60d034339935",
     "type": "split",
     "children": [
       {
-        "id": "beea1a661e1fdb61",
+        "id": "8e3e55d250f4ecfa",
         "type": "tabs",
         "children": [
           {
-            "id": "b3bb55410f55edb8",
+            "id": "105cf4df569fb185",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
+                "file": "Algebra/Матрицы (04.09).md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -92,18 +97,19 @@
             }
           },
           {
-            "id": "f222ae3038683c33",
+            "id": "51db94463f8baf0f",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "Algebra/Матрицы (04.09).md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
             }
           },
           {
-            "id": "56dbc5e4c35f1b13",
+            "id": "754761bac5ba6283",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -114,11 +120,13 @@
             }
           },
           {
-            "id": "966ae487f0d4b133",
+            "id": "31e04cc43d60d1b9",
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "Algebra/Матрицы (04.09).md"
+              }
             }
           }
         ]
@@ -138,13 +146,19 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "f11b0fbb499d1a57",
+  "active": "f59659cdac493bf8",
   "lastOpenFiles": [
-    "АиАЯ",
-    "ВвПИ",
-    "Матан",
-    "Дискра",
-    "Алгебра",
-    "Welcome.md"
+    "Algebra/Важное.md",
+    "Algebra/Матрицы (04.09).md",
+    "Test/j.py",
+    "Test/j.cpp",
+    "Test/j",
+    "Test/h.cpp",
+    "Test/h",
+    "Test/f.cpp",
+    "Test/f",
+    "Test/e.cpp",
+    "Test/e",
+    "Test/d.cpp"
   ]
 }
