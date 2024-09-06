@@ -7,5 +7,12 @@
   "ignoreGlobalFolder": [],
   "ignoreCreatedFolder": [],
   "enableExperimentalHash": false,
-  "fileHashMap": {}
+  "fileHashMap": {
+    "algebra/Важное.md": "1bf8388d6882d9d29244515c25467e4397cc20d316d9cf76f5896093ab09ef7f",
+    "calculus/Важное.md": "31093f17b14fab386d34263049a281b3e9b3b5fe9f185f68250443f75d4aaea2",
+    "discrete/Важное.md": "6a0d8941f4f0974d26262703c67db1dca74790ad499204c4d82b6f2165e55aeb",
+    "calculus/Формальная логика (06.09).md": "f8da0bad67ee8a4d62183f28129f8648f2dadb5efd291a0bc2644fd2d609002f",
+    "algebra/Матрицы (04.09).md": "af2b77fcd68e100072be09f019b4d72759877e514c4af68e196175f63b8db5a9",
+    "discrete/Математическая логика (06.09).md": "7b9f4b905a4b562ef37776ba69c919c9e416d4eb988b491d9e604c6065b5312f"
+  }
 }
