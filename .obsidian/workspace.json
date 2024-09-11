@@ -25,14 +25,38 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "discrete/Математическая логика (06.09).md",
+                "file": "algorithms/Важное.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "33c856a7fd62b739",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "algebra/Матрицы (04.09).md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "d64a01d75d5e5532",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "algebra/Операции над матрицами (11.09).md",
                 "mode": "source",
                 "source": false
               }
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -82,7 +106,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "043a60d034339935",
@@ -98,7 +122,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "discrete/Математическая логика (06.09).md",
+                "file": "algebra/Операции над матрицами (11.09).md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +139,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "discrete/Математическая логика (06.09).md",
+                "file": "algebra/Операции над матрицами (11.09).md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +162,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "discrete/Математическая логика (06.09).md"
+                "file": "algebra/Операции над матрицами (11.09).md"
               }
             }
           }
@@ -159,15 +183,19 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "54992de25949156c",
+  "active": "d64a01d75d5e5532",
   "lastOpenFiles": [
-    "calculus/Формальная логика (06.09).md",
     "algebra/Матрицы (04.09).md",
-    "algebra/Важное.md",
-    "calculus/Важное.md",
+    "algebra/Операции над матрицами (11.09).md",
     "discrete/Важное.md",
     "discrete/Математическая логика (06.09).md",
-    "Untitled.md",
+    "algebra/ДЗ 1.md",
+    "algorithms/Важное.md",
+    "algorithms/Aлгоритмы (10.09).md",
+    "calculus/Важное.md",
+    "calculus/Формальная логика (06.09).md",
+    "algebra/Важное.md",
+    "algorithms",
     "discrete",
     "calculus",
     "test/j.py",
@@ -177,7 +205,6 @@
     "test/e.cpp",
     "test/d.cpp",
     "test/c.py",
-    "test/c.cpp",
     "Algebra/Матрицы (04.09).md",
     "Algebra/Важное.md"
   ]
