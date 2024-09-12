@@ -1,4 +1,8 @@
 {
   "baseFontSize": 20,
-  "theme": "obsidian"
+  "theme": "obsidian",
+  "enabledCssSnippets": [
+    "Dark PDF export",
+    "pdf"
+  ]
 }

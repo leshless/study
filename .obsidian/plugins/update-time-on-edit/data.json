@@ -11,12 +11,11 @@
     "algebra/Важное.md": "161cac26af0da338b99c0f6cc75f19bbf691c7444f262e39694acfbec3209f4b",
     "calculus/Важное.md": "c419a4c47806606b6902dd171509c29e93156bd488f54ba68abc38cc6ac25efd",
     "discrete/Важное.md": "a914dc7c0b47c21fe2a125da3c9548b8842e369d0219a73812395f50932bd965",
-    "calculus/Формальная логика (06.09).md": "124a7fb8f47acba9d0afee9c0a5f69b4dee1b5fd7af0ac0acdf5dfcb561df63b",
-    "algebra/Матрицы (04.09).md": "a3818b32c9ef51f059e73e0f38039d74c8ae4ab029fab9351df0472fee228d2b",
-    "discrete/Математическая логика (06.09).md": "fdf4cf548fb99e87cac0fc1d6050cafd35026f1773c909c3f3eaf79ed3575ed0",
-    "algebra/ДЗ 1.md": "8ed6d02fae82ed9451575542be7e56ebe46cd243a2c8ea86c48bb4752567b80f",
+    "calculus/Формальная логика (06.09).md": "a37b2518a93fc2ff8a1cafe4a855301b77a7c809e3162a47e68b7ad15028fff9",
+    "algebra/Матрицы (04.09).md": "aad578cb13cf7b54edd9c16e3ede793434a5d48df25c39731ae5226e08639136",
+    "discrete/Математическая логика (06.09).md": "229627a74ab350cf56afc0c850af76e2a1481110927e0deb6cb5f45e325fcf81",
     "algorithms/Важное.md": "718ec929595ed348b491e2fc988fae4b84cf35dfa218363be57f5316a335e190",
-    "algorithms/Aлгоритмы (10.09).md": "d4d9aa253bbfb638934797e4a46a1faad9eaf48ae06b8b54070131f9f5f6e03c",
-    "algebra/Операции над матрицами (11.09).md": "a1ff02b9fa548a9c81aea85c3df1e258e08b25e2b9b08c0f7178174b5c523002"
+    "algebra/Преобразования и СЛУ (11.09).md": "c6fdf6263e2bae5384a846826e3ff1defa732cbb548b84c0a9c0454b1fc7a05b",
+    "algorithms/Aлгоритмы и МТ (10.09).md": "d4d9aa253bbfb638934797e4a46a1faad9eaf48ae06b8b54070131f9f5f6e03c"
   }
 }

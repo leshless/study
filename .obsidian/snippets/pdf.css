@@ -1,0 +1,12 @@
+@media print {
+	h1, h2, h3, h4, h5, h6, p, ul, li, ol {
+		color: black !important;
+	}
+
+	 pre,
+        code span,
+        code {
+                color: black !important;
+                background-color: white !important;
+  }
+}
