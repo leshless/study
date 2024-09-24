@@ -7,5 +7,14 @@
   "ignoreGlobalFolder": [],
   "ignoreCreatedFolder": [],
   "enableExperimentalHash": false,
-  "fileHashMap": {}
+  "fileHashMap": {
+    "algorithms/(17.09) Память и Типы в Языке С.md": "80edfa52ce1161fd5e6141786fb10d8df301eeb944c27425d6da054cbd4e066d",
+    "algebra/(18.09) Определители.md": "7b5076ecffe02895202e937810aaca70eefed70a35b85066688c837e51ce2851",
+    "algebra/(11.09) Преобразования и СЛУ.md": "cba3312463e7ecd704de02394d1e61e0eedee7c62ea30c747f3c7b977e92d79e",
+    "algebra/Важное.md": "16a10ece2a2299a2ef77302d29f95855b7517fc2281c4ea31658a079414fe428",
+    "discrete/(13.09) Математическая логика 2.md": "9d841405ca5e27cd0b0818805494a44a1745a3cbb93c76a3206586aa59cc2065",
+    "discrete/(20.09) Списки и индукция.md": "cea3ed44f067d378a5b91f86cf3d05a81e21a325075ba0542158bd08e59a5004",
+    "calculus/(20.09) Сходимость и пределы.md": "0e6bcd36e10a0ea9d8afc7895ccc755ba12054d09ec71af5149948be79d2697a",
+    "algorithms/(24.09) Синтаксис С.md": "6f8a28bb7f3f51df909eceb3cb99fda580c6fa1c9be1367bcdfe39cbe6004445"
+  }
 }
