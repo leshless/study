@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "algebra/(25.09) Свойства определителя.md",
+                "file": "algorithms/(24.09) Переменные и операции.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "algebra/(25.09) Свойства определителя.md",
+                "file": "algorithms/(24.09) Переменные и операции.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "algebra/(25.09) Свойства определителя.md",
+                "file": "algorithms/(24.09) Переменные и операции.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "algebra/(25.09) Свойства определителя.md"
+                "file": "algorithms/(24.09) Переменные и операции.md"
               }
             }
           },
@@ -158,18 +158,18 @@
   },
   "active": "ac171b338c3b5691",
   "lastOpenFiles": [
-    "algebra/(11.09) Преобразования и СЛУ.md",
+    "calculus/(20.09) Сходимость и пределы.md",
     "algebra/(25.09) Свойства определителя.md",
     "calculus/(13.09) Индукция и последовательности.md",
-    "calculus/(20.09) Сходимость и пределы.md",
+    "algebra/(18.09) Определители.md",
+    "algebra/Важное.md",
+    "algebra/(11.09) Преобразования и СЛУ.md",
     "algorithms/(17.09) Память и Типы в Языке С.md",
     "algorithms/(24.09) Переменные и операции.md",
     "algorithms/(10.09) Aлгоритмы и МТ.md",
     "algorithms/Важное.md",
     "discrete/Важное.md",
     "calculus/Важное.md",
-    "algebra/Важное.md",
-    "algebra/(18.09) Определители.md",
     "discrete/(20.09) Списки и индукция.md",
     "discrete/(13.09) Математическая логика 2.md",
     "discrete/Untitled",
