@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <inttypes.h>
 
 int main(void){
     int sum = 0;

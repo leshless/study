@@ -4,22 +4,47 @@
     "type": "split",
     "children": [
       {
-        "id": "67328c18f1d0ba65",
+        "id": "6d0ab85ff7caa313",
         "type": "tabs",
         "children": [
           {
-            "id": "ac171b338c3b5691",
+            "id": "4e30bdcf99702b9b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "algorithms/(24.09) Переменные и операции.md",
+                "file": "discrete/(27.09) Индукция.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "e720629ce90e8a61",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "calculus/(04.10).md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "ba5501f02c433f52",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "algebra/(02.10) Cвойства определителя 2.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -69,7 +94,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 355.5
+    "width": 200
   },
   "right": {
     "id": "043a60d034339935",
@@ -85,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "algorithms/(24.09) Переменные и операции.md",
+                "file": "calculus/(04.10).md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "algorithms/(24.09) Переменные и операции.md",
+                "file": "calculus/(04.10).md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "algorithms/(24.09) Переменные и операции.md"
+                "file": "calculus/(04.10).md"
               }
             }
           },
@@ -152,20 +177,27 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false,
-      "table-editor-obsidian:Advanced Tables Toolbar": false
+      "command-palette:Open command palette": false
     }
   },
-  "active": "ac171b338c3b5691",
+  "active": "e720629ce90e8a61",
   "lastOpenFiles": [
-    "calculus/(20.09) Сходимость и пределы.md",
-    "algebra/(25.09) Свойства определителя.md",
-    "calculus/(13.09) Индукция и последовательности.md",
+    "algorithms/(01.10) Операторы, массивы, строки.md",
+    "calculus/(04.10).md",
+    "discrete/(27.09) Индукция.md",
+    "algebra/(02.10) Cвойства определителя 2.md",
+    "attachments/Pasted image 20241002132932.png",
+    "attachments/Pasted image 20241002132927.png",
+    "algorithms/(24.09) Переменные и операции.md",
     "algebra/(18.09) Определители.md",
+    "algebra/(25.09) Свойства определителя.md",
+    "algebra/(04.09) Матрицы.md",
+    "calculus/(27.09) Арифметика предела.md",
+    "calculus/(20.09) Сходимость и пределы.md",
+    "calculus/(13.09) Индукция и последовательности.md",
     "algebra/Важное.md",
     "algebra/(11.09) Преобразования и СЛУ.md",
     "algorithms/(17.09) Память и Типы в Языке С.md",
-    "algorithms/(24.09) Переменные и операции.md",
     "algorithms/(10.09) Aлгоритмы и МТ.md",
     "algorithms/Важное.md",
     "discrete/Важное.md",
@@ -174,7 +206,6 @@
     "discrete/(13.09) Математическая логика 2.md",
     "discrete/Untitled",
     "calculus/(06.09) Формальная логика.md",
-    "algebra/(04.09) Матрицы.md",
     "attachments/Pasted image 20240918133312.png",
     "attachments/Pasted image 20240917101658.png",
     "attachments/Pasted image 20240917101447.png",
@@ -190,18 +221,12 @@
     "lections/calculus/Важное.md",
     "lections/calculus",
     "lections/discrete/Математическая логика 2 (13.09).md",
-    "lections/discrete/Математическая логика (06.09).md",
-    "lections/discrete/Важное.md",
     "lections/discrete",
-    "lections/algorithms/Язык Си (17.09).md",
-    "lections/algorithms/Важное.md",
-    "lections/algorithms/Aлгоритмы и МТ (10.09).md",
     "lections/algorithms",
     "lections/algebra",
     "lections",
     "attachments",
     "attachements",
-    "Pasted image 20240912130401.png",
     "algorithms"
   ]
 }

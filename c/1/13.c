@@ -1,20 +1,4 @@
 #include <stdio.h>
-#include <inttypes.h>
-
-double power(double x, int n){
-    if (n == 0){
-        return 1;
-    }
-    return x * power(x, n-1);
-}
-
-double fact(int n){
-    if (n == 0){
-        return 1;
-    }
-
-    return n * fact(n-1);
-}
 
 int main(void){
     double x;
@@ -22,9 +6,17 @@ int main(void){
     scanf("%lf %d", &x, &n);
 
     double res = 0;
+    double cur = x;
+
     for (int i = 0; i < n; i++){
-        int m = i*2+1;
-        res += power(-1, i) * power(x, m) / fact(m);    
+        if (i % 2 == 0){
+            res += cur;
+        }else{
+            res -= cur;
+        }
+
+        cur *= x*x;
+        cur /= (i*2+2) * (i*2+3);
     }
 
     printf("%.6lf\n", res);
