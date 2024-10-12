@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 
-const int N = 4000;
+const int N = 100;
+const double EPS = 0.000000001;
 
 int main(void){
     int n;
@@ -17,15 +18,21 @@ int main(void){
         scanf("%lf", &a[i]);
     }
 
-    double v0 = 0;
+    double v = 0;
     double t = 0;
 
     for (int i = 0; i < n; i++){
-        double v = sqrt(2*a[i]*s[i] + v0*v0);
-        double dt = (v - v0) / a[i];
+        double dv = sqrt(2*a[i]*s[i] + v*v) - v;
+        
+        double dt;
+        if ((a[i] < EPS) && (a[i] > -EPS)){
+            dt = s[i]/v;
+        }else{
+            dt = dv/a[i];
+        }
 
         t += dt;
-        v0 = v;
+        v += dv;
     }
 
     printf("%.4f\n", t);
