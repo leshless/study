@@ -17,11 +17,14 @@
     "calculus/(20.09) Сходимость и пределы.md": "0e6bcd36e10a0ea9d8afc7895ccc755ba12054d09ec71af5149948be79d2697a",
     "algorithms/(24.09) Переменные и операции.md": "e94bd4a393d320bb7a7b0415f58d163da2636c111de8dc2712360faa20272366",
     "calculus/(13.09) Индукция и последовательности.md": "19dedc53ea6875ab3c9c354cbba51735d8c90ee5afb029a513284d266b322311",
-    "algebra/(25.09) Свойства определителя.md": "771ac59d834f5844c04a76c2236380fd5dbb2d88ca39b60df74c1b7c7a5d8094",
     "calculus/(27.09) Арифметика предела.md": "eb35bf0641508fcf0b0bcb8961ed193c543a8533209f2134a213344f0d21d931",
-    "discrete/(27.09) Индукция.md": "7b66aee5d5025fbcc54ab178b0ccc03cabcc8dbf7a387872719d1595510a325b",
     "algebra/(02.10) Cвойства определителя 2.md": "393caf11139d4b7cd80c2e6badc159c4d503d3e17f48c82af593340346da5c14",
     "algorithms/(01.10) Операторы, массивы, строки.md": "d385ae807504134016c040334c4615da83d3d7c60e36524316cd5feaa32a9be6",
-    "calculus/(04.10).md": "d6620a43db79065d928ad6724264342a493f4d5f0af2804c369ba17c388e205a"
+    "calculus/(04.10) Теорема Вейерштрасса.md": "fc8b76b478c6307ed6e76b443cbf23a0674f87d2ec711c2b114a82709876c831",
+    "algebra/(25.09) Свойства определителя 1.md": "771ac59d834f5844c04a76c2236380fd5dbb2d88ca39b60df74c1b7c7a5d8094",
+    "discrete/(04.10) Целочисленная арифметика 1.md": "ad1b270aad205922075ebaf29d2640d50e9bd6b659a7f56acdc3a86569cbe3cf",
+    "algebra/(09.10) Обратные матрицы.md": "10e5a706b5c7a50f416aeec13aaa6a7393e84f92d0ccb60608833c0c79fa09b0",
+    "discrete/(11.10) Целочисленная арифметика 2.md": "a1dc6155bb647231c36cfe9ef03ee937286311bbdc0e91f3a7bc05e2c8de1ddd",
+    "discrete/(27.09) Принципы индукции.md": "7b66aee5d5025fbcc54ab178b0ccc03cabcc8dbf7a387872719d1595510a325b"
   }
 }
