@@ -16,7 +16,9 @@
                 "file": "discrete/(27.09) Принципы индукции.md",
                 "mode": "source",
                 "source": false
-              }
+              },
+              "icon": "lucide-file",
+              "title": "(27.09) Принципы индукции"
             }
           },
           {
@@ -28,7 +30,9 @@
                 "file": "calculus/(04.10) Теорема Вейерштрасса.md",
                 "mode": "source",
                 "source": false
-              }
+              },
+              "icon": "lucide-file",
+              "title": "(04.10) Теорема Вейерштрасса"
             }
           },
           {
@@ -40,7 +44,9 @@
                 "file": "algebra/(02.10) Cвойства определителя 2.md",
                 "mode": "source",
                 "source": false
-              }
+              },
+              "icon": "lucide-file",
+              "title": "(02.10) Cвойства определителя 2"
             }
           },
           {
@@ -52,7 +58,9 @@
                 "file": "algebra/(09.10) Обратные матрицы.md",
                 "mode": "source",
                 "source": false
-              }
+              },
+              "icon": "lucide-file",
+              "title": "(09.10) Обратные матрицы"
             }
           },
           {
@@ -64,7 +72,9 @@
                 "file": "calculus/(04.10) Теорема Вейерштрасса.md",
                 "mode": "source",
                 "source": false
-              }
+              },
+              "icon": "lucide-file",
+              "title": "(04.10) Теорема Вейерштрасса"
             }
           },
           {
@@ -73,10 +83,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "algebra/(09.10) Обратные матрицы.md",
+                "file": "algorithms/(24.09) Переменные и операции.md",
                 "mode": "source",
                 "source": false
-              }
+              },
+              "icon": "lucide-file",
+              "title": "(24.09) Переменные и операции"
+            }
+          },
+          {
+            "id": "66ea3ab3c4a397fd",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "calculus/(11.10) Подпоследовательности и частичные пределы.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "(11.10) Подпоследовательности и частичные пределы"
             }
           },
           {
@@ -85,14 +111,56 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "algebra/(02.10) Cвойства определителя 2.md",
+                "file": "algebra/(09.10) Обратные матрицы.md",
                 "mode": "source",
                 "source": false
-              }
+              },
+              "icon": "lucide-file",
+              "title": "(09.10) Обратные матрицы"
+            }
+          },
+          {
+            "id": "d66b51f3c7db0b08",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "algebra/(16.10) Ранги и линейная независимость.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "(16.10) Ранги и линейная независимость"
+            }
+          },
+          {
+            "id": "1bbe5aa8ae013ee6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "algebra/(23.10) Вычисление ранга.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "(23.10) Вычисление ранга"
+            }
+          },
+          {
+            "id": "d2f89fcc8c86f95e",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.7.4"
+              },
+              "icon": "lucide-file",
+              "title": "Release Notes 1.7.4"
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 10
       }
     ],
     "direction": "vertical"
@@ -111,8 +179,10 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
-              }
+                "sortOrder": "byCreatedTimeReverse"
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
             }
           },
           {
@@ -127,7 +197,9 @@
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
-              }
+              },
+              "icon": "lucide-search",
+              "title": "Search"
             }
           },
           {
@@ -135,7 +207,9 @@
             "type": "leaf",
             "state": {
               "type": "bookmarks",
-              "state": {}
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
             }
           }
         ]
@@ -158,7 +232,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "algebra/(09.10) Обратные матрицы.md",
+                "file": "discrete/(27.09) Принципы индукции.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -166,7 +240,9 @@
                 "searchQuery": "",
                 "backlinkCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for (27.09) Принципы индукции"
             }
           },
           {
@@ -175,10 +251,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "algebra/(09.10) Обратные матрицы.md",
+                "file": "discrete/(27.09) Принципы индукции.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from (27.09) Принципы индукции"
             }
           },
           {
@@ -189,7 +267,9 @@
               "state": {
                 "sortOrder": "frequency",
                 "useHierarchy": true
-              }
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
             }
           },
           {
@@ -198,8 +278,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "algebra/(09.10) Обратные матрицы.md"
-              }
+                "file": "discrete/(27.09) Принципы индукции.md"
+              },
+              "icon": "lucide-list",
+              "title": "Outline of (27.09) Принципы индукции"
             }
           },
           {
@@ -207,7 +289,9 @@
             "type": "leaf",
             "state": {
               "type": "advanced-tables-toolbar",
-              "state": {}
+              "state": {},
+              "icon": "lucide-file",
+              "title": "Plugin no longer active"
             }
           }
         ],
@@ -228,47 +312,47 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "e4cf936440d6f0f2",
+  "active": "d2f89fcc8c86f95e",
   "lastOpenFiles": [
-    "algebra/(02.10) Cвойства определителя 2.md",
-    "calculus/(04.10) Теорема Вейерштрасса.md",
-    "discrete/(11.10) Целочисленная арифметика 2.md",
+    "attachments/Pasted image 20241023122726.png",
+    "attachments/Pasted image 20241023122640.png",
+    "attachments/Pasted image 20240912130416.png",
+    "algebra/(23.10) Вычисление ранга.md",
+    "algebra/(16.10) Ранги и линейная независимость.md",
+    "attachments/Pasted image 20241016122725.png",
+    "attachments/Pasted image 20240917101658.png",
+    "attachments/Pasted image 20241016122716.png",
+    "attachments/Pasted image 20241016122715.png",
+    "attachments/Pasted image 20241016122700.png",
+    "algebra/(09.10) Обратные матрицы.md",
     "discrete/(20.09) Списки и индукция.md",
-    "discrete/(04.10) Целочисленная арифметика 1.md",
     "discrete/(27.09) Принципы индукции.md",
+    "algorithms/(17.09) Память и Типы в Языке С.md",
+    "algorithms/(24.09) Переменные и операции.md",
+    "discrete/(11.10) Целочисленная арифметика 2.md",
+    "algebra/(02.10) Cвойства определителя 2.md",
+    "calculus/(11.10) Подпоследовательности и частичные пределы.md",
+    "discrete/(04.10) Целочисленная арифметика 1.md",
+    "algorithms/(10.09) Aлгоритмы и МТ.md",
+    "algorithms/(01.10) Операторы, массивы, строки.md",
+    "calculus/(04.10) Теорема Вейерштрасса.md",
     "calculus/(27.09) Арифметика предела.md",
     "calculus/(20.09) Сходимость и пределы.md",
     "calculus/(06.09) Формальная логика.md",
-    "algebra/(09.10) Обратные матрицы.md",
     "Untitled",
     "algebra/(25.09) Свойства определителя 1.md",
     "calculus/Важное.md",
-    "algorithms/(01.10) Операторы, массивы, строки.md",
     "attachments/Pasted image 20241002132932.png",
     "attachments/Pasted image 20241002132927.png",
-    "algorithms/(24.09) Переменные и операции.md",
     "algebra/(18.09) Определители.md",
     "algebra/(04.09) Матрицы.md",
     "calculus/(13.09) Индукция и последовательности.md",
     "algebra/Важное.md",
     "algebra/(11.09) Преобразования и СЛУ.md",
-    "algorithms/(17.09) Память и Типы в Языке С.md",
-    "algorithms/(10.09) Aлгоритмы и МТ.md",
     "algorithms/Важное.md",
-    "discrete/Важное.md",
-    "discrete/(13.09) Математическая логика 2.md",
     "discrete/Untitled",
     "attachments/Pasted image 20240918133312.png",
-    "attachments/Pasted image 20240917101658.png",
-    "attachments/Pasted image 20240917101447.png",
-    "attachments/Pasted image 20240912130416.png",
-    "attachments/Pasted image 20240917112902.png",
-    "discrete/(06.09) Математическая логика 1.md",
-    "lections/attachments/Pasted image 20240917101658.png",
-    "lections/attachments/Pasted image 20240912130416.png",
-    "lections/attachments/Pasted image 20240917101447.png",
     "lections/attachments",
-    "lections/calculus/Формальная логика (06.09).md",
     "lections/calculus",
     "lections/discrete",
     "lections/algorithms",

@@ -13,7 +13,7 @@
     "algebra/(11.09) Преобразования и СЛУ.md": "cba3312463e7ecd704de02394d1e61e0eedee7c62ea30c747f3c7b977e92d79e",
     "algebra/Важное.md": "16a10ece2a2299a2ef77302d29f95855b7517fc2281c4ea31658a079414fe428",
     "discrete/(13.09) Математическая логика 2.md": "9d841405ca5e27cd0b0818805494a44a1745a3cbb93c76a3206586aa59cc2065",
-    "discrete/(20.09) Списки и индукция.md": "cea3ed44f067d378a5b91f86cf3d05a81e21a325075ba0542158bd08e59a5004",
+    "discrete/(20.09) Списки и индукция.md": "ab26d475ac84103424b205dc8cb52207eaa56f50563b71d709233edd09063e22",
     "calculus/(20.09) Сходимость и пределы.md": "0e6bcd36e10a0ea9d8afc7895ccc755ba12054d09ec71af5149948be79d2697a",
     "algorithms/(24.09) Переменные и операции.md": "e94bd4a393d320bb7a7b0415f58d163da2636c111de8dc2712360faa20272366",
     "calculus/(13.09) Индукция и последовательности.md": "19dedc53ea6875ab3c9c354cbba51735d8c90ee5afb029a513284d266b322311",
@@ -24,7 +24,10 @@
     "algebra/(25.09) Свойства определителя 1.md": "771ac59d834f5844c04a76c2236380fd5dbb2d88ca39b60df74c1b7c7a5d8094",
     "discrete/(04.10) Целочисленная арифметика 1.md": "ad1b270aad205922075ebaf29d2640d50e9bd6b659a7f56acdc3a86569cbe3cf",
     "algebra/(09.10) Обратные матрицы.md": "10e5a706b5c7a50f416aeec13aaa6a7393e84f92d0ccb60608833c0c79fa09b0",
-    "discrete/(11.10) Целочисленная арифметика 2.md": "a1dc6155bb647231c36cfe9ef03ee937286311bbdc0e91f3a7bc05e2c8de1ddd",
-    "discrete/(27.09) Принципы индукции.md": "7b66aee5d5025fbcc54ab178b0ccc03cabcc8dbf7a387872719d1595510a325b"
+    "discrete/(11.10) Целочисленная арифметика 2.md": "79fd22f64b331c385a8ba6211ca84334c29c1844d00396744bfec99f87a34f9b",
+    "discrete/(27.09) Принципы индукции.md": "7b66aee5d5025fbcc54ab178b0ccc03cabcc8dbf7a387872719d1595510a325b",
+    "calculus/(11.10) Подпоследовательности и частичные пределы.md": "2d229f2020381fb1b7e777120ba14013568b0dd1f0c0111181d943a1e1ec67c4",
+    "algebra/(16.10) Ранги и линейная независимость.md": "2f41f12a3628458e7d4fe1f7435934108ea3aa41fcc8cafed992899095c2745d",
+    "algebra/(23.10) Вычисление ранга.md": "643d151fd54caee04e9e8655671479dd597703e0e52ff262ec86f5ba0a2e4b6a"
   }
 }
