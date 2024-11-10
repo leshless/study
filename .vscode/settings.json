@@ -4,6 +4,8 @@
         "chrono": "cpp",
         "regex": "cpp",
         "ostream": "cpp",
-        "complex": "cpp"
-    }
+        "complex": "cpp",
+        "math.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
