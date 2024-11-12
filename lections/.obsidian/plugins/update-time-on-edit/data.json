@@ -23,11 +23,15 @@
     "calculus/(04.10) Теорема Вейерштрасса.md": "fc8b76b478c6307ed6e76b443cbf23a0674f87d2ec711c2b114a82709876c831",
     "algebra/(25.09) Свойства определителя 1.md": "771ac59d834f5844c04a76c2236380fd5dbb2d88ca39b60df74c1b7c7a5d8094",
     "discrete/(04.10) Целочисленная арифметика 1.md": "ad1b270aad205922075ebaf29d2640d50e9bd6b659a7f56acdc3a86569cbe3cf",
-    "algebra/(09.10) Обратные матрицы.md": "10e5a706b5c7a50f416aeec13aaa6a7393e84f92d0ccb60608833c0c79fa09b0",
+    "algebra/(09.10) Обратные матрицы.md": "40e2868a51bebc853531f9c861461e9e9c369f1b7cf7350b2c2bd726e0884f75",
     "discrete/(11.10) Целочисленная арифметика 2.md": "79fd22f64b331c385a8ba6211ca84334c29c1844d00396744bfec99f87a34f9b",
     "discrete/(27.09) Принципы индукции.md": "7b66aee5d5025fbcc54ab178b0ccc03cabcc8dbf7a387872719d1595510a325b",
     "calculus/(11.10) Подпоследовательности и частичные пределы.md": "2d229f2020381fb1b7e777120ba14013568b0dd1f0c0111181d943a1e1ec67c4",
     "algebra/(16.10) Ранги и линейная независимость.md": "2f41f12a3628458e7d4fe1f7435934108ea3aa41fcc8cafed992899095c2745d",
-    "algebra/(23.10) Вычисление ранга.md": "643d151fd54caee04e9e8655671479dd597703e0e52ff262ec86f5ba0a2e4b6a"
+    "algebra/(23.10) Вычисление ранга.md": "643d151fd54caee04e9e8655671479dd597703e0e52ff262ec86f5ba0a2e4b6a",
+    "algebra/(06.11) СЛАУ в общем виде.md": "de520fcad9b240363a9df1a65609fcd25cc489fa8ad82ad56389faf291176c55",
+    "calculus/(08.11) Теоремы о пределе функции.md": "ad929900caeebad40f3803a0224e736a09490779e43e65ade4324ee972be3289",
+    "calculus/(01.11) Предел функции.md": "b8394ea6fcf9f69e688add45f985464f65571f74eb032c381551dd14ea08710b",
+    "discrete/(08.11).md": "27cc0a6ea1b4a839e5a14ad8a54ddc010cd5c3b5a17e41f376dfc28026b1c877"
   }
 }
