@@ -259,12 +259,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "discrete/(15.11) Теория чисел 2.md",
+                "file": "algorithms/(24.09) Переменные и операции.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "(15.11) Теория чисел 2"
+              "title": "(24.09) Переменные и операции"
             }
           }
         ],
@@ -422,8 +422,9 @@
   },
   "active": "ce1a1ab598426e83",
   "lastOpenFiles": [
-    "discrete/(08.11) Теория чисел 1.md",
+    "algorithms/(17.09) Память и Типы в Языке С.md",
     "discrete/(15.11) Теория чисел 2.md",
+    "discrete/(08.11) Теория чисел 1.md",
     "algebra/(06.11) СЛАУ в общем виде.md",
     "algebra/(13.11) Фундаментальная система решений.md",
     "algebra/(09.10) Обратные матрицы.md",
@@ -447,7 +448,6 @@
     "attachments/Pasted image 20241016122700.png",
     "discrete/(20.09) Списки и индукция.md",
     "discrete/(27.09) Принципы индукции.md",
-    "algorithms/(17.09) Память и Типы в Языке С.md",
     "algorithms/(24.09) Переменные и операции.md",
     "discrete/(11.10) Целочисленная арифметика 2.md",
     "discrete/(04.10) Целочисленная арифметика 1.md",
