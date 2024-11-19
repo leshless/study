@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 const int N = 1000010;
 
 void print_formated(char* s, int k){
+    s[k] = 0;
     int n = strlen(s);
     
-    if (n >= k){
+    if (n == k){
         printf("%s\n", s);
         return;
     }
@@ -16,63 +18,100 @@ void print_formated(char* s, int k){
         c += (s[i] == ' ');
     }
 
+    if ((c != 1) && (s[n-1] == ' ')){
+        s[n-1] = 0;
+        n -= 1;
+        c -= 1;
+    }
+
+    if (c == 0){
+        printf("%s\n", s);
+        return;
+    }
+
     int q = (k + c - n) / c;
     int r = (k + c - n) % c;
 
     c = 0;
-    char res[N];
-    res[0] = 0;
+    char* res = malloc(N);
+
+    int m = 0;
 
     for (int i = 0; i < n; i++){
         if (s[i] != ' '){
-            int m = strlen(res);
             res[m] = s[i];
-            res[m + 1] = 0;
+            m++;
+
             continue;
         }
         
-        int m = q + (c < r);
-        for (int j = 0; j < m; j++){
-            strcat(res, " ");
+        int t = q + (c < r);
+        for (int j = 0; j < t; j++){
+            res[m] = ' ';
+            m++;
         }
 
         c++;
     }
 
+    res[m] = 0;
     printf("%s\n", res);
+    free(res);
+
     return;
 }
 
 int main(void){
     int k;
-    scanf("%d", &k);
+    scanf("%d\n", &k);
 
-    char cur[N];
-    cur[0] = 0;
-    int c = 0;
+    char* s = malloc(N);
+    fgets(s, N, stdin);
+    
+    int n = strlen(s);
+    s[n-1] = 0;
+    n -= 1;
 
-    char s[N];
-    while (scanf("%s", s) != EOF){
-        if (strlen(cur) + strlen(s) + 1 > k){
-            if ((c == 1) && (strlen(s) != k)){
-                strcat(cur, " ");
-            }
+    char* cur = malloc(N);
+    int m = 0;
+
+    char* word = malloc(N);
+    int w = 0;
+
+    for (int i = 0; i <= n; i++){
+        if ((i < n) && (s[i] != ' ')){
+            word[w] = s[i];
+            word[w+1] = 0;
+            w++;
+
+            continue;
+        }
+
+        if (w + m > k){
             print_formated(cur, k);
-            cur[0] = 0;
-            c = 0;
+            
+            strcpy(&cur[0], word);
+            m = w;
+        }else{
+            strcpy(&cur[m], word);
+            m += w;
         }
-
-        if (c != 0){
-            strcat(cur, " ");
-        }
-        strcat(cur, s);
-        c++;
+       
+        word[0] = 0;
+        w = 0;
+    
+        if (m != k){
+            cur[m] = ' ';
+            cur[m+1] = 0;
+            m += 1;
+        }    
     }
 
-    if (c == 1){
-        strcat(cur, " ");
-    }
     print_formated(cur, k);
 
+    free(word);
+    free(cur);
+    free(s);
+
     return 0;
-}   //
+}
