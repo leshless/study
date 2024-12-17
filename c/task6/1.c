@@ -2,57 +2,53 @@
 #include <stdlib.h>
 #include <string.h>
 
-const int N = 2e5 + 10;
+const int N = 2e4 + 10;
+
+short is_delim(char x){
+    return (x == ' ') || (x == '\n') || (x == '.');
+}
+
+short is_letter(char x){
+    return (('a' <= x) && (x <= 'z')) || (('A' <= x) && (x <= 'Z'));
+}
 
 int main(void){
     FILE* in = fopen("input.txt", "r+");
     char* buf = malloc(N);
 
+    short prev_empty = 1;
     int w = 0;
     int s = 0;
-    int p = 1;
-    short prev_nl = 0;
+    int p = 0;
 
     while (fgets(buf, N, in) != NULL){
         int n = strlen(buf);
-
-        short only_spaces = 1;
-        for (int i = 0; i < n; i++){
-            if (buf[i] != ' ' && buf[i] != '\n'){
-                only_spaces = 0;
-            }
-        }
-
-        if (only_spaces){
-            prev_nl = 1;
-            continue;
-        }
-
-        if (prev_nl){
-            prev_nl = 0;
-            p++;
-        }
+        char cur_empty = 1;
 
         for (int i = 0; i < n; i++){
-            if (buf[i] == ' ' && buf[i-1] != ' '){
+            if ((i != 0) && is_delim(buf[i]) && is_letter(buf[i-1])){
                 w++;
             }
             if (buf[i] == '.'){
                 s++;
             }
+            if (is_letter(buf[i])){
+                cur_empty = 0;
+            }
         }
 
-        if (buf[n-2] != '-'){
-            w++;
+        if (prev_empty && !cur_empty){
+            p++;
         }
+
+        prev_empty = cur_empty;
     }
-
-    fclose(in);
-    free(buf);
 
     FILE* out = fopen("output.txt", "w+");
     fprintf(out, "%d %d %d\n", w, s, p);
 
+    free(buf);
+    fclose(in);
     fclose(out);
 
 

@@ -287,16 +287,30 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "algebra/(27.11) Основная теорема Алгебры.md",
+                "file": "discrete/(22.11) Теория чисел 3.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "(27.11) Основная теорема Алгебры"
+              "title": "(22.11) Теория чисел 3"
+            }
+          },
+          {
+            "id": "89b3b5f21bf4e10f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "algebra/(11.12) Декартова система координат.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "(11.12) Декартова система координат"
             }
           }
         ],
-        "currentTab": 20
+        "currentTab": 21
       }
     ],
     "direction": "vertical"
@@ -448,12 +462,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "9ff094784f035d99",
+  "active": "89b3b5f21bf4e10f",
   "lastOpenFiles": [
-    "algebra/(20.11) Комплексные числа.md",
-    "algebra/(27.11) Основная теорема Алгебры.md",
-    "calculus/(22.11) Обратные функции.md",
     "discrete/(22.11) Теория чисел 3.md",
+    "algebra/(11.12) Декартова система координат.md",
+    "calculus/(29.11) Основные функции.md",
+    "calculus/(08.11) Теоремы о пределе функции.md",
+    "calculus/(22.11) Обратные функции.md",
+    "algebra/(27.11) Основная теорема Алгебры.md",
+    "algebra/(20.11) Комплексные числа.md",
     "discrete/(15.11) Теория чисел 2.md",
     "calculus/(01.11) Предел функции.md",
     "calculus/(11.10) Подпоследовательности и частичные пределы.md",
@@ -469,7 +486,6 @@
     "algebra/(25.09) Свойства определителя 1.md",
     "algebra/(18.09) Определители.md",
     "algebra/(04.09) Матрицы.md",
-    "calculus/(08.11) Теоремы о пределе функции.md",
     "discrete/(13.09) Математическая логика 2.md",
     "attachments/Pasted image 20240912130416.png",
     "attachments/Pasted image 20241023122726.png",
@@ -482,8 +498,6 @@
     "discrete/(20.09) Списки и индукция.md",
     "discrete/(27.09) Принципы индукции.md",
     "discrete/(11.10) Целочисленная арифметика 2.md",
-    "discrete/(04.10) Целочисленная арифметика 1.md",
-    "algorithms/(10.09) Aлгоритмы и МТ.md",
     "Untitled",
     "attachments/Pasted image 20241002132932.png",
     "attachments/Pasted image 20241002132927.png",
