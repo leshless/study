@@ -1,6 +1,9 @@
 *
+
 !*.*
 !*/
+!Makefile
+
 *.exe
 .vscode
 input.txt

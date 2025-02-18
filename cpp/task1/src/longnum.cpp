@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 #include "longnum.hpp"
 
@@ -52,7 +53,17 @@ void longnum::rshift(size_t offset) {
     }  
 }
 
-void longnum::set_precision(size_t new_precision){
+void longnum::align(longnum& other) {
+    size_t precision = std::max(this->precision, other.precision);
+    this->set_precision(precision);
+    other.set_precision(precision);
+    
+    size_t size = std::max(this->bytes.size(), other.bytes.size());
+    this->resize(size);
+    other.resize(size);
+}
+
+void longnum::set_precision(size_t new_precision) {
     size_t precision = this->precision;
 
     size_t offset;
@@ -88,68 +99,83 @@ std::string longnum::binstring(){
     return res;
 }
 
-longnum& longnum::operator=(const longnum& other){
-    if (this == &other){
-        return *this;
-    }
+longnum longnum::operator+(longnum b) const{
+    longnum a = *this;
 
-    std::copy(other.bytes.begin(), other.bytes.end(), this->bytes);
-    this->precision = other.precision;
-    this->sign = other.sign;
+    a.align(b);
 
-    return *this;
-}
-
-longnum longnum::operator+(longnum& a){
-    longnum& b = *this;
-
-    size_t precision = std::max(a.precision, b.precision);
-    a.set_precision(precision);
-    b.set_precision(precision);
-    
-    size_t size = std::max(a.bytes.size(), b.bytes.size()) + 1;
-    a.resize(size);
-    b.resize(size);
-
-    if (a.sign){
-        if (b.sign){
-            // Just sum second and first and set sign to 1
-
-        }else{
-            // Subtract first from second
-
-
-        }
-    
-        return a;
-    }
-    
-    if (b.sign){
-        // Subtract second from first
-    
-        return a;
+    if (a.sign != b.sign){
+        // Subtract
     }
 
     // Just sum second and first
     uint16_t carry = 0;
-    for (size_t i = 0; i < size; ++i){
+    for (size_t i = 0; i < a.bytes.size(); ++i){
         uint16_t res = (uint16_t)a.bytes[i] + (uint16_t)b.bytes[i] + carry;
         
         a.bytes[i] = (res << 8) >> 8;
         carry = res >> 8;
     }
 
+    if (carry) {
+        a.bytes.push_back(carry);
+    }
+
     return a;
 }
 
-longnum longnum::operator-(longnum& other){
+longnum longnum::operator-(longnum other) const{
     other.sign = 1;
     return *this + other;
 }
 
+
+bool operator<(const longnum& lhs, const longnum& rhs) {
+    if (lhs.sign > rhs.sign){
+        return true;
+    }
+
+    if (lhs.sign < rhs.sign){
+        return false;
+    }
+
+    longnum lhsc = lhs;
+    longnum rhsc = rhs;
+    lhsc.align(rhsc);
+
+    for (int i = lhsc.bytes.size(); i >= 0; i--){
+        if (lhsc.bytes[i] != rhsc.bytes[i]){
+            std::cout << int(lhsc.bytes[i]) << " " << int(rhsc.bytes[i]) << std::endl;
+            return (lhsc.bytes[i] < rhsc.bytes[i]) != lhsc.sign;
+        }
+    }
+
+    return false;
+}
+
+bool operator>(const longnum& lhs, const longnum& rhs) {
+    return rhs < lhs;
+}
+
+bool operator<=(const longnum& lhs, const longnum& rhs) {
+    return !(lhs < rhs);
+}
+
+bool operator>=(const longnum& lhs, const longnum& rhs) {
+    return !(lhs < rhs);
+}
+
+bool operator!=(const longnum& lhs, const longnum& rhs) {
+    return (lhs < rhs) || (lhs < rhs);
+}
+
+bool operator==(const longnum& lhs, const longnum& rhs) {
+    return !(lhs != rhs);
+}
+
 longnum::longnum(uint8_t a){
     this->bytes = std::vector<uint8_t>(INIT_LENGTH, 0);
-    this->bytes[0] = a;
+    this->bytes[2] = a;
     this->precision = INIT_PRECISION;
     this->sign = 0;
 }

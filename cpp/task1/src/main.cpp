@@ -2,15 +2,26 @@
 #include "longnum.hpp"
 
 int main() {
-    auto x = longnum(131);
+    longnum x = longnum(1);
+    longnum y = longnum(2);
+
+    std::cout << (y < x) << std::endl;
     std::cout << x.binstring() << std::endl;
+    std::cout << y.binstring() << std::endl;
 
-    // longnum y = longnum(44);
-    // std::cout << y.binstring() << std::endl;
+    std::cout << (y < x) << std::endl;
+    std::cout << x.binstring() << std::endl;
+    std::cout << y.binstring() << std::endl;
 
-    // longnum z = x + y;
-    // std::cout << z.binstring() << std::endl;
+    std::cout << (x < y) << std::endl;
+    std::cout << x.binstring() << std::endl;
+    std::cout << y.binstring() << std::endl;
 
-    // z.set_precision(30);
-    // std::cout << z.binstring() << std::endl;
+    std::cout << (y <= x) << std::endl;
+    std::cout << x.binstring() << std::endl;
+    std::cout << y.binstring() << std::endl;
+
+    std::cout << (y <= x) << std::endl;
+    std::cout << x.binstring() << std::endl;
+    std::cout << y.binstring() << std::endl;
 }
