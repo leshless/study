@@ -2,35 +2,31 @@
 #include "longnum.hpp"
 
 int main() {
-    // longnum x = longnum(1);
-    // longnum y = longnum(10);
-    // std::cout << x.binstring() << std::endl;
-    // std::cout << y.binstring() << std::endl;
+    longnum x = -555.3857483_ln;
+    x.set_precision(64);
+    std::cout << "OK" << std::endl;
+    std::cout << x.to_string() << std::endl;
 
-    // longnum z = x / y;
+    longnum y = 33.137782_ln;
 
-    // std::cout << z.binstring() << std::endl;
+    std::cout << y.to_string() << std::endl;
 
-    // longnum w = z * y;
+    std::cout << (x + y).to_string() << std::endl;
+    std::cout << (x - y).to_string() << std::endl;
 
-    // std::cout << w.binstring() << std::endl;
+    try{
+        std::cout << (x * y).to_string() << std::endl;
+    }
+    catch (char const* s) {
+        std::cout << s << std::endl;
+    }
 
-
-    longnum x = longnum(1);
-    longnum y = longnum(3);
-
-    longnum z = x / y;
-
-    std::cout << z.to_string() << std::endl;
-
-    // std::cout << (x < y) << std::endl;
-    // std::cout << (x > y) << std::endl;
-    // std::cout << (y > x) << std::endl;
-    // std::cout << (y < x) << std::endl;
-
-    // std::cout << (x <= y) << std::endl;
-    // std::cout << (x >= y) << std::endl;
-
-    // std::cout << (x == y) << std::endl;
-    // std::cout << (x != y) << std::endl;
+    try{
+        std::cout << (x / 0.0_ln).to_string() << std::endl;
+    }
+    catch (char const* s) {
+        std::cout << s << std::endl;
+    }
+    
+    std::cout << (x / y).to_string() << std::endl;
 }

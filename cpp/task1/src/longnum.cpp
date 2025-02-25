@@ -1,24 +1,23 @@
-#include <stdlib.h>
-
 #include <vector>
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 
 #include "longnum.hpp"
 
+const size_t CHUNK_SIZE = 16;
 const size_t INIT_PRECISION = 16;
-const size_t INIT_LENGTH = 4;
 
 void longnum::resize(size_t new_size) {
-    size_t size = this->bytes.size();
+    size_t size = this->chunks.size();
 
     if (size == new_size) {
         return;
     }else if (size > new_size) {
-        throw "The new size cannot be less than previous";
+        throw "The new size cannot be less than previous one";
     }
     
-    this->bytes.resize(new_size);
+    this->chunks.resize(new_size);
 }
 
 void longnum::lshift(size_t offset) {
@@ -26,20 +25,20 @@ void longnum::lshift(size_t offset) {
         return;
     }
 
-    size_t size = this->bytes.size();
-    size_t q = offset / 8;
-    size_t r = offset % 8;
+    size_t size = this->chunks.size();
+    size_t q = offset / CHUNK_SIZE;
+    size_t r = offset % CHUNK_SIZE;
 
     // Resize here to make sure that we won't overflow
     size_t new_size = size + q + (r == 0 ? 0 : 1);
     this->resize(new_size);
 
-    for (int i = new_size - 1; i >= 0; --i){
-        // Two adjacent bytes, whe are interested in
-        uint8_t lb = (i - q >= 0 ? this->bytes[i - q] : 0);
-        uint8_t rb = (i - q - 1 >= 0 ? this->bytes[i - q - 1] : 0);
+    for (size_t i = new_size - 1; i >= 0; --i){
+        // Two adjacent chunks, whe are interested in
+        uint16_t lb = (i - q >= 0 ? this->chunks[i - q] : 0);
+        uint16_t rb = (i - q - 1 >= 0 ? this->chunks[i - q - 1] : 0);
 
-        this->bytes[i] = (lb << r) | (rb >> (8 - r));
+        this->chunks[i] = (lb << r) | (rb >> (CHUNK_SIZE - r));
     }   
 }
 
@@ -48,16 +47,16 @@ void longnum::rshift(size_t offset) {
         return;
     }
 
-    size_t size = this->bytes.size();
-    size_t q = offset / 8;
-    size_t r = offset % 8;
+    size_t size = this->chunks.size();
+    size_t q = offset / CHUNK_SIZE;
+    size_t r = offset % CHUNK_SIZE;
 
-    for (int i = 0; i < size; ++i){
-        // Two adjacent bytes, whe are interested in
-        uint8_t rb = (i + q < size ? this->bytes[i + q] : 0);
-        uint8_t lb = (i + q + 1 < size ? this->bytes[i + q + 1] : 0);
+    for (size_t i = 0; i < size; ++i){
+        // Two adjacent chunks, whe are interested in
+        uint16_t rb = (i + q < size ? this->chunks[i + q] : 0);
+        uint16_t lb = (i + q + 1 < size ? this->chunks[i + q + 1] : 0);
 
-        this->bytes[i] = (lb << (8 - r)) | (rb >> r);
+        this->chunks[i] = (lb << (CHUNK_SIZE - r)) | (rb >> r);
     }  
 }
 
@@ -73,7 +72,7 @@ void longnum::align(longnum& other) {
     this->set_precision(precision);
     other.set_precision(precision);
     
-    size_t size = std::max(this->bytes.size(), other.bytes.size());
+    size_t size = std::max(this->chunks.size(), other.chunks.size());
     this->resize(size);
     other.resize(size);
 }
@@ -83,9 +82,9 @@ bool longnum::less_abs(const longnum& other) {
     longnum b = other;
     a.align(b);
 
-    for (int i = a.bytes.size()-1; i >= 0; i--){
-        if (a.bytes[i] != b.bytes[i]){
-            return (a.bytes[i] < b.bytes[i]);
+    for (int i = a.chunks.size()-1; i >= 0; i--){
+        if (a.chunks[i] != b.chunks[i]){
+            return (a.chunks[i] < b.chunks[i]);
         }
     }
 
@@ -93,9 +92,10 @@ bool longnum::less_abs(const longnum& other) {
 }
 
 bool longnum::is_zero(void) {
-    longnum zero = longnum(0);
-    if (!this->less_abs(zero) && !zero.less_abs(*this)){
-        return true;
+    for (size_t i = 0; i < this->chunks.size(); ++i){
+        if (this->chunks[i] != 0){
+            return false;
+        }
     }
     
     return false;
@@ -106,10 +106,10 @@ void longnum::pretify(void) {
         this->sign = 0;
     }
 
-    size_t mn = this->precision / 8 + 1;
+    size_t mn = this->precision / CHUNK_SIZE + 1;
 
-    while (this->bytes.size() > 1 && this->bytes.size() > mn && this->bytes.back() == 0) {
-        this->bytes.pop_back();
+    while (this->chunks.size() > 1 && this->chunks.size() > mn && this->chunks.back() == 0) {
+        this->chunks.pop_back();
     }
 }
 
@@ -129,8 +129,6 @@ void longnum::set_precision(size_t new_precision) {
 }
 
 std::string longnum::to_string(){
-    // TODO: handle negative numbers
-
     longnum ten = longnum(10);
 
     longnum before = this->round();
@@ -143,7 +141,7 @@ std::string longnum::to_string(){
         cur = cur.round();
 
         longnum rem = before - (cur * ten);
-        before_res.push_back('0' + rem.bytes[rem.precision / 8]);
+        before_res.push_back('0' + rem.chunks[rem.precision / CHUNK_SIZE]);
 
         before = cur;
     }
@@ -159,7 +157,7 @@ std::string longnum::to_string(){
         longnum cur = after * ten;
         longnum rem = cur.round();
 
-        after_res.push_back('0' + rem.bytes[rem.precision / 8]);
+        after_res.push_back('0' + rem.chunks[rem.precision / CHUNK_SIZE]);
 
         after = cur - rem;
     }
@@ -189,28 +187,28 @@ longnum operator+(const longnum& lhs, const longnum& rhs) {
             std::swap(a, b);
         }
 
-        uint16_t carry = 0;
-        for (size_t i = 0; i < a.bytes.size(); ++i){
-            if ((uint16_t)a.bytes[i] < (uint16_t)b.bytes[i] + carry){
-                a.bytes[i] = ((uint16_t)1 << 8) + (uint16_t)a.bytes[i] - (uint16_t)b.bytes[i] - carry;
+        uint32_t carry = 0;
+        for (size_t i = 0; i < a.chunks.size(); ++i){
+            if ((uint32_t)a.chunks[i] < (uint32_t)b.chunks[i] + carry){
+                a.chunks[i] = ((uint32_t)1 << CHUNK_SIZE) + (uint32_t)a.chunks[i] - (uint32_t)b.chunks[i] - carry;
                 carry = 1;
             }else {
-                a.bytes[i] = (uint16_t)a.bytes[i] - (uint16_t)b.bytes[i] - carry;
+                a.chunks[i] = (uint32_t)a.chunks[i] - (uint32_t)b.chunks[i] - carry;
                 carry = 0;
             }
         }
     }else {
         // Just sum second and first
-        uint16_t carry = 0;
-        for (size_t i = 0; i < a.bytes.size(); ++i){
-            uint16_t res = (uint16_t)a.bytes[i] + (uint16_t)b.bytes[i] + carry;
+        uint32_t carry = 0;
+        for (size_t i = 0; i < a.chunks.size(); ++i){
+            uint32_t res = (uint32_t)a.chunks[i] + (uint32_t)b.chunks[i] + carry;
             
-            a.bytes[i] = (res << 8) >> 8;
-            carry = res >> 8;
+            a.chunks[i] = (res << CHUNK_SIZE) >> CHUNK_SIZE;
+            carry = res >> CHUNK_SIZE;
         }
         
         if (carry) {
-            a.bytes.push_back(carry);
+            a.chunks.push_back(carry);
         }
     }
     
@@ -229,21 +227,21 @@ longnum operator*(const longnum& lhs, const longnum& rhs) {
     longnum b = rhs;
     a.align(b);
 
-    longnum res = longnum(0);
-    res.resize(a.bytes.size() + b.bytes.size());
+    longnum res = longnum();
+    res.resize(a.chunks.size() + b.chunks.size());
     res.precision = a.precision + b.precision;
     res.sign = a.sign != b.sign;
 
-    for (size_t i = 0; i < a.bytes.size(); ++i) {
-        uint16_t carry = 0;
+    for (size_t i = 0; i < a.chunks.size(); ++i) {
+        uint32_t carry = 0;
 
-        for (size_t j = 0; j < b.bytes.size() || carry; ++j) {
-            if (j < b.bytes.size()) {
-                const uint16_t prod = (uint16_t)a.bytes[i] * (uint16_t)b.bytes[j] + (uint16_t)res.bytes[i + j] + carry;
-                res.bytes[i + j] = ((prod << 8) >> 8);
-                carry = prod >> 8;
+        for (size_t j = 0; j < b.chunks.size() || carry; ++j) {
+            if (j < b.chunks.size()) {
+                const uint32_t prod = (uint32_t)a.chunks[i] * (uint32_t)b.chunks[j] + (uint32_t)res.chunks[i + j] + carry;
+                res.chunks[i + j] = ((prod << CHUNK_SIZE) >> CHUNK_SIZE);
+                carry = prod >> CHUNK_SIZE;
             } else {
-                res.bytes[i + j] += carry;
+                res.chunks[i + j] += carry;
                 carry = 0;
             }
         }
@@ -268,22 +266,22 @@ longnum operator/(longnum lhs, longnum rhs) {
     rhs.sign = 0;
 
     longnum res = longnum();
-    res.resize(lhs.bytes.size());
+    res.resize(lhs.chunks.size());
     res.set_precision(lhs.precision);
     res.sign = lhs.sign != rhs.sign;
 
     longnum cur = longnum();
     
-    for (int i = lhs.bytes.size() - 1; i >= 0; --i) {
-        cur.lshift(8);
-        cur = cur + longnum(lhs.bytes[i]);
+    for (int i = lhs.chunks.size() - 1; i >= 0; --i) {
+        cur.lshift(CHUNK_SIZE);
+        cur = cur + longnum(lhs.chunks[i]);
 
-        uint8_t q = 0;
+        uint16_t q = 0;
         while (cur >= rhs) {
             cur = cur - rhs;
             ++q;
         }
-        res.bytes[i] = q;
+        res.chunks[i] = q;
     }
 
     res.pretify();
@@ -291,6 +289,38 @@ longnum operator/(longnum lhs, longnum rhs) {
     return res;
 }
 
+longnum operator""_ln(long double num) {
+    bool sign = (num < 0);
+    num = std::abs(num);
+
+    long long before = floor(num);
+    long double after = num - before;
+
+    std::vector<uint16_t> before_res;
+    while (before > 0){
+        before_res.push_back(before % (1 << CHUNK_SIZE));
+        before >>= CHUNK_SIZE;
+    }
+
+    std::vector<uint16_t> after_res;
+    for (size_t i = 0; i < INIT_PRECISION / CHUNK_SIZE; ++i){
+        after *= (1 << CHUNK_SIZE);
+        uint16_t cur = floor(after);
+        after -= cur;
+
+        after_res.push_back(cur);
+    }
+
+    std::reverse(after_res.begin(), after_res.end());
+
+    longnum res = longnum();
+    res.sign = sign;
+    res.precision = INIT_PRECISION;
+    res.chunks.insert(res.chunks.begin(), after_res.begin(), after_res.end());
+    res.chunks.insert(res.chunks.end(), before_res.begin(), before_res.end());
+
+    return res;
+}
 
 bool operator<(const longnum& lhs, const longnum& rhs) {
     if (lhs.sign > rhs.sign){
@@ -305,9 +335,9 @@ bool operator<(const longnum& lhs, const longnum& rhs) {
     longnum b = rhs;
     a.align(b);
 
-    for (int i = a.bytes.size()-1; i >= 0; i--){
-        if (a.bytes[i] != b.bytes[i]){
-            return (a.bytes[i] < b.bytes[i]) != a.sign;
+    for (int i = a.chunks.size()-1; i >= 0; i--){
+        if (a.chunks[i] != b.chunks[i]){
+            return (a.chunks[i] < b.chunks[i]) != a.sign;
         }
     }
 
@@ -334,9 +364,9 @@ bool operator==(const longnum& lhs, const longnum& rhs) {
     return !(lhs != rhs);
 }
 
-longnum::longnum(uint8_t a){
-    this->bytes = std::vector<uint8_t>(5, 0);
-    this->bytes[4] = a;
-    this->precision = 32;
+longnum::longnum(uint16_t a){
+    this->chunks = std::vector<uint16_t>(INIT_PRECISION + 1, 0);
+    this->chunks[INIT_PRECISION / CHUNK_SIZE] = a;
+    this->precision = INIT_PRECISION;
     this->sign = 0;
 }
