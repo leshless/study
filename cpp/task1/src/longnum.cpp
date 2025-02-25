@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 #include "longnum.hpp"
 
@@ -14,13 +15,17 @@ void longnum::resize(size_t new_size) {
     if (size == new_size) {
         return;
     }else if (size > new_size) {
-        throw "TODO: exception";
+        throw "The new size cannot be less than previous";
     }
     
     this->bytes.resize(new_size);
 }
 
 void longnum::lshift(size_t offset) {
+    if (offset == 0) {
+        return;
+    }
+
     size_t size = this->bytes.size();
     size_t q = offset / 8;
     size_t r = offset % 8;
@@ -39,6 +44,10 @@ void longnum::lshift(size_t offset) {
 }
 
 void longnum::rshift(size_t offset) {
+    if (offset == 0) {
+        return;
+    }
+
     size_t size = this->bytes.size();
     size_t q = offset / 8;
     size_t r = offset % 8;
@@ -50,6 +59,13 @@ void longnum::rshift(size_t offset) {
 
         this->bytes[i] = (lb << (8 - r)) | (rb >> r);
     }  
+}
+
+longnum longnum::round() {
+    longnum before = *this;
+    before.set_precision(0);
+
+    return before;
 }
 
 void longnum::align(longnum& other) {
@@ -76,10 +92,18 @@ bool longnum::less_abs(const longnum& other) {
     return false;
 }
 
-void longnum::pretify(void) {
+bool longnum::is_zero(void) {
     longnum zero = longnum(0);
     if (!this->less_abs(zero) && !zero.less_abs(*this)){
-        this->sign = false;
+        return true;
+    }
+    
+    return false;
+}
+
+void longnum::pretify(void) {
+    if (this->is_zero()){
+        this->sign = 0;
     }
 
     size_t mn = this->precision / 8 + 1;
@@ -104,29 +128,47 @@ void longnum::set_precision(size_t new_precision) {
     this->precision = new_precision;
 }
 
-std::string longnum::binstring(){
-    size_t size = this->bytes.size();
-    size_t precision = this->precision;
+std::string longnum::to_string(){
+    // TODO: handle negative numbers
 
-    std::string res;
+    longnum ten = longnum(10);
 
-    for (int i = 0; i < size; i++){
-        for (int j = 0; j < 8; j++){
-            if (i * 8 + j == precision){
-                res.push_back('.');
-            }
+    longnum before = this->round();
+    longnum after = *this - before;
+    after.pretify();
 
-            uint8_t b = this->bytes[i] & (1 << j);
-            res.push_back(b == 0 ? '0' : '1');
-        }
+    std::string before_res;
+    while (!before.is_zero()) {
+        longnum cur = before / ten;
+        cur = cur.round();
+
+        longnum rem = before - (cur * ten);
+        before_res.push_back('0' + rem.bytes[rem.precision / 8]);
+
+        before = cur;
+    }
+
+    if (before_res == ""){
+        before_res = "0";
+    }
+
+    std::reverse(before_res.begin(), before_res.end());
+
+    std::string after_res;
+    while (!after.is_zero()) {
+        longnum cur = after * ten;
+        longnum rem = cur.round();
+
+        after_res.push_back('0' + rem.bytes[rem.precision / 8]);
+
+        after = cur - rem;
     }
 
     if (this->sign) {
-        res.push_back('-');
+        return "-" + before_res + "." + after_res;
     }
 
-    std::reverse(res.begin(), res.end());
-    return res;
+    return before_res + "." + after_res;
 }
 
 longnum operator-(const longnum& num) {
@@ -189,7 +231,8 @@ longnum operator*(const longnum& lhs, const longnum& rhs) {
 
     longnum res = longnum(0);
     res.resize(a.bytes.size() + b.bytes.size());
-    res.set_precision(a.precision + b.precision);
+    res.precision = a.precision + b.precision;
+    res.sign = a.sign != b.sign;
 
     for (size_t i = 0; i < a.bytes.size(); ++i) {
         uint16_t carry = 0;
@@ -206,15 +249,46 @@ longnum operator*(const longnum& lhs, const longnum& rhs) {
         }
     }
 
-    res.sign = a.sign != b.sign;
     res.set_precision(std::max(a.precision, b.precision));
     res.pretify();
 
     return res;
 }
 
-longnum operator/(const longnum& lhs, const longnum& rhs) {
-    return longnum(0);
+longnum operator/(longnum lhs, longnum rhs) {
+    if (rhs.is_zero()) {
+        throw "Division by zero is not allowed";
+    }
+
+    if (lhs.is_zero()) {
+        return lhs;
+    }
+
+    lhs.align(rhs);
+    rhs.sign = 0;
+
+    longnum res = longnum();
+    res.resize(lhs.bytes.size());
+    res.set_precision(lhs.precision);
+    res.sign = lhs.sign != rhs.sign;
+
+    longnum cur = longnum();
+    
+    for (int i = lhs.bytes.size() - 1; i >= 0; --i) {
+        cur.lshift(8);
+        cur = cur + longnum(lhs.bytes[i]);
+
+        uint8_t q = 0;
+        while (cur >= rhs) {
+            cur = cur - rhs;
+            ++q;
+        }
+        res.bytes[i] = q;
+    }
+
+    res.pretify();
+    
+    return res;
 }
 
 
@@ -261,8 +335,8 @@ bool operator==(const longnum& lhs, const longnum& rhs) {
 }
 
 longnum::longnum(uint8_t a){
-    this->bytes = std::vector<uint8_t>(3, 0);
-    this->bytes[2] = a;
-    this->precision = INIT_PRECISION;
+    this->bytes = std::vector<uint8_t>(5, 0);
+    this->bytes[4] = a;
+    this->precision = 32;
     this->sign = 0;
 }
