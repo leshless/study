@@ -14,8 +14,8 @@ private:
     bool less_abs(const longnum &other);
     bool is_zero();
     void pretify(void);
-public:
     longnum round();
+public:
     void set_precision(size_t new_precision);
     std::string to_string();
 

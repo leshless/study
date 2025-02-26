@@ -6,7 +6,7 @@
 #include "longnum.hpp"
 
 const size_t CHUNK_SIZE = 16;
-const size_t INIT_PRECISION = 16;
+const size_t INIT_PRECISION = 64;
 
 void longnum::resize(size_t new_size) {
     size_t size = this->chunks.size();
@@ -26,18 +26,18 @@ void longnum::lshift(size_t offset) {
     }
 
     size_t size = this->chunks.size();
-    size_t q = offset / CHUNK_SIZE;
-    size_t r = offset % CHUNK_SIZE;
+    int q = offset / CHUNK_SIZE;
+    int r = offset % CHUNK_SIZE;
 
     // Resize here to make sure that we won't overflow
     size_t new_size = size + q + (r == 0 ? 0 : 1);
     this->resize(new_size);
 
-    for (size_t i = new_size - 1; i >= 0; --i){
+    for (int i = new_size - 1; i >= 0; i--){
         // Two adjacent chunks, whe are interested in
         uint16_t lb = (i - q >= 0 ? this->chunks[i - q] : 0);
         uint16_t rb = (i - q - 1 >= 0 ? this->chunks[i - q - 1] : 0);
-
+        
         this->chunks[i] = (lb << r) | (rb >> (CHUNK_SIZE - r));
     }   
 }
@@ -98,7 +98,7 @@ bool longnum::is_zero(void) {
         }
     }
     
-    return false;
+    return true;
 }
 
 void longnum::pretify(void) {
@@ -180,7 +180,7 @@ longnum operator+(const longnum& lhs, const longnum& rhs) {
     longnum a = lhs;
     longnum b = rhs;
     a.align(b);
-
+    
     if (a.sign != b.sign){
         // Subtract the one which abs value is less from the others
         if (a.less_abs(b)) {
@@ -211,7 +211,7 @@ longnum operator+(const longnum& lhs, const longnum& rhs) {
             a.chunks.push_back(carry);
         }
     }
-    
+
     a.pretify();
 
     return a;
@@ -365,7 +365,7 @@ bool operator==(const longnum& lhs, const longnum& rhs) {
 }
 
 longnum::longnum(uint16_t a){
-    this->chunks = std::vector<uint16_t>(INIT_PRECISION + 1, 0);
+    this->chunks = std::vector<uint16_t>(INIT_PRECISION / CHUNK_SIZE + 1, 0);
     this->chunks[INIT_PRECISION / CHUNK_SIZE] = a;
     this->precision = INIT_PRECISION;
     this->sign = 0;
