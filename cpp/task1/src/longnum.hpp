@@ -3,7 +3,7 @@
 
 class longnum {
 private:
-    std::vector<uint8_t> bytes; // TODO: rewrite to uint_32
+    std::vector<uint16_t> chunks;
     size_t precision;
     bool sign;
 
@@ -14,9 +14,10 @@ private:
     bool less_abs(const longnum &other);
     bool is_zero();
     void pretify(void);
-public:
     longnum round();
+public:
     void set_precision(size_t new_precision);
+    std::string to_string();
 
     longnum& operator=(const longnum& other) = default;
 
@@ -32,10 +33,11 @@ public:
     friend bool operator>=(const longnum& lhs, const longnum& rhs);
     friend bool operator!=(const longnum& lhs, const longnum& rhs);
     friend bool operator==(const longnum& lhs, const longnum& rhs);
-
-    std::string to_string();
-
+    friend longnum operator""_ln(long double number);
+    
     longnum() = default;
-    longnum(uint8_t a);
+    longnum(uint16_t a);
     ~longnum() = default;
 };
+
+longnum operator""_ln(long double number);
