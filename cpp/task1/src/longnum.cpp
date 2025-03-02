@@ -58,9 +58,11 @@ void longnum::rshift(size_t offset) {
 
         this->chunks[i] = (lb << (CHUNK_SIZE - r)) | (rb >> r);
     }  
+
+    this->pretify();
 }
 
-longnum longnum::round() {
+longnum longnum::floor() {
     longnum before = *this;
     before.set_precision(0);
 
@@ -102,10 +104,6 @@ bool longnum::is_zero(void) {
 }
 
 void longnum::pretify(void) {
-    if (this->is_zero()){
-        this->sign = 0;
-    }
-
     size_t mn = this->precision / CHUNK_SIZE + 1;
 
     while (this->chunks.size() > 1 && this->chunks.size() > mn && this->chunks.back() == 0) {
@@ -131,14 +129,14 @@ void longnum::set_precision(size_t new_precision) {
 std::string longnum::to_string(){
     longnum ten = longnum(10);
 
-    longnum before = this->round();
+    longnum before = this->floor();
     longnum after = *this - before;
     after.pretify();
 
     std::string before_res;
     while (!before.is_zero()) {
         longnum cur = before / ten;
-        cur = cur.round();
+        cur = cur.floor();
 
         longnum rem = before - (cur * ten);
         before_res.push_back('0' + rem.chunks[rem.precision / CHUNK_SIZE]);
@@ -155,7 +153,7 @@ std::string longnum::to_string(){
     std::string after_res;
     while (!after.is_zero()) {
         longnum cur = after * ten;
-        longnum rem = cur.round();
+        longnum rem = cur.floor();
 
         after_res.push_back('0' + rem.chunks[rem.precision / CHUNK_SIZE]);
 
@@ -263,29 +261,32 @@ longnum operator/(longnum lhs, longnum rhs) {
     }
 
     lhs.align(rhs);
-    rhs.sign = 0;
-
-    longnum res = longnum();
-    res.resize(lhs.chunks.size());
-    res.set_precision(lhs.precision);
-    res.sign = lhs.sign != rhs.sign;
-
-    longnum cur = longnum();
+    lhs.lshift(lhs.precision * CHUNK_SIZE);
     
-    for (int i = lhs.chunks.size() - 1; i >= 0; --i) {
-        cur.lshift(CHUNK_SIZE);
-        cur = cur + longnum(lhs.chunks[i]);
+    longnum res = longnum(0);
+    res.align(rhs);
+    res.sign = lhs.sign != rhs.sign;
+    
+    longnum rem = longnum(0);
 
-        uint16_t q = 0;
-        while (cur >= rhs) {
-            cur = cur - rhs;
-            ++q;
+    lhs.sign = 0;
+    rhs.sign = 0;
+    
+    for (int i = lhs.chunks.size() * CHUNK_SIZE - 1; i >= 0; --i) {
+        size_t q = i / CHUNK_SIZE;
+        size_t r = i % CHUNK_SIZE;
+
+        rem.lshift(1);
+        rem.chunks[rem.precision * CHUNK_SIZE] |= (lhs.chunks[q] >> r ? 1 : 0);
+
+        if (rem > rhs) {
+            rem = rem - rhs;
+            res.chunks[q] |= (1 << r);
         }
-        res.chunks[i] = q;
     }
 
     res.pretify();
-    
+
     return res;
 }
 
