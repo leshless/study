@@ -1,3 +1,6 @@
+#ifndef SYMPP
+#define SYMPP
+
 #include <string>
 #include <memory>
 
@@ -38,8 +41,6 @@ class symbol : public expression <T> {
         std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x);
         std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e);
         std::shared_ptr<expression<T>> Copy();
-
-        friend std::shared_ptr<expression<T>> Symbol(std::string name);
 };
 
 template <typename T>
@@ -57,8 +58,6 @@ class number : public expression <T> {
         std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x);
         std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e);
         std::shared_ptr<expression<T>> Copy();
-
-        friend std::shared_ptr<expression<T>> Number(T value);
 };
 
 template <typename T>
@@ -77,8 +76,6 @@ class add : public expression <T> {
         std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x);
         std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e);
         std::shared_ptr<expression<T>> Copy();
-
-        friend std::shared_ptr<expression<T>> operator+(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
 };
 
 template <typename T>
@@ -97,8 +94,6 @@ class sub : public expression <T> {
         std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x);
         std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e);
         std::shared_ptr<expression<T>> Copy();
-
-        friend std::shared_ptr<expression<T>> operator-(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
 };
 
 template <typename T>
@@ -117,8 +112,6 @@ class mul : public expression <T> {
         std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x);
         std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e);
         std::shared_ptr<expression<T>> Copy();
-
-        friend std::shared_ptr<expression<T>> operator*(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
 };
 
 template <typename T>
@@ -137,8 +130,6 @@ class div : public expression <T> {
         std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x);
         std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e);
         std::shared_ptr<expression<T>> Copy();
-
-        friend std::shared_ptr<expression<T>> operator/(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
 };
 
 template <typename T>
@@ -156,8 +147,6 @@ class ln : public expression <T> {
         std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x);
         std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e);
         std::shared_ptr<expression<T>> Copy();
-
-        friend std::shared_ptr<expression<T>> operator^(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
 };
 
 template <typename T>
@@ -175,8 +164,6 @@ class exp : public expression <T> {
         std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x);
         std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e);
         std::shared_ptr<expression<T>> Copy();
-
-        friend std::shared_ptr<expression<T>> operator^(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
 };
 
 template <typename T>
@@ -194,8 +181,6 @@ class sin : public expression <T> {
         std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x);
         std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e);
         std::shared_ptr<expression<T>> Copy();
-
-        friend std::shared_ptr<expression<T>> operator^(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
 };
 
 template <typename T>
@@ -213,8 +198,6 @@ class cos : public expression <T> {
         std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x);
         std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e);
         std::shared_ptr<expression<T>> Copy();
-
-        friend std::shared_ptr<expression<T>> operator^(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
 };
 
 template <typename T>
@@ -225,18 +208,38 @@ std::shared_ptr<expression<T>> Number(T value);
 
 template <typename T>
 std::shared_ptr<expression<T>> operator+(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
+template <typename T>
+std::shared_ptr<expression<T>> operator+(std::shared_ptr<expression<T>> lhs, T rhs);
+template <typename T>
+std::shared_ptr<expression<T>> operator+(T lhs, std::shared_ptr<expression<T>> rhs);
 
 template <typename T>
 std::shared_ptr<expression<T>> operator-(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
+template <typename T>
+std::shared_ptr<expression<T>> operator-(std::shared_ptr<expression<T>> lhs, T rhs);
+template <typename T>
+std::shared_ptr<expression<T>> operator-(T lhs, std::shared_ptr<expression<T>> rhs);
 
 template <typename T>
 std::shared_ptr<expression<T>> operator*(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
+template <typename T>
+std::shared_ptr<expression<T>> operator*(std::shared_ptr<expression<T>> lhs, T rhs);
+template <typename T>
+std::shared_ptr<expression<T>> operator*(T lhs, std::shared_ptr<expression<T>> rhs);
 
 template <typename T>
 std::shared_ptr<expression<T>> operator/(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
+template <typename T>
+std::shared_ptr<expression<T>> operator/(std::shared_ptr<expression<T>> lhs, T rhs);
+template <typename T>
+std::shared_ptr<expression<T>> operator/(T lhs, std::shared_ptr<expression<T>> rhs);
 
 template <typename T>
 std::shared_ptr<expression<T>> operator^(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs);
+template <typename T>
+std::shared_ptr<expression<T>> operator^(std::shared_ptr<expression<T>> lhs, T rhs);
+template <typename T>
+std::shared_ptr<expression<T>> operator^(T lhs, std::shared_ptr<expression<T>> rhs);
 
 template <typename T>
 std::shared_ptr<expression<T>> Ln(std::shared_ptr<expression<T>> arg);
@@ -251,3 +254,5 @@ template <typename T>
 std::shared_ptr<expression<T>> Cos(std::shared_ptr<expression<T>> arg);
 
 }
+
+#endif

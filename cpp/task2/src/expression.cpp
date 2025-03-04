@@ -497,8 +497,28 @@ std::shared_ptr<expression<T>> operator+(std::shared_ptr<expression<T>> lhs, std
 }
 
 template <typename T>
+std::shared_ptr<expression<T>> operator+(std::shared_ptr<expression<T>> lhs, T rhs) {
+    return std::make_shared<add<T>>(lhs->Copy(), Number<T>(rhs));
+}
+
+template <typename T>
+std::shared_ptr<expression<T>> operator+(T lhs, std::shared_ptr<expression<T>> rhs) {
+    return std::make_shared<add<T>>(Number<T>(lhs), rhs->Copy());
+}
+
+template <typename T>
 std::shared_ptr<expression<T>> operator-(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs) {
     return std::make_shared<sub<T>>(lhs->Copy(), rhs->Copy());
+}
+
+template <typename T>
+std::shared_ptr<expression<T>> operator-(std::shared_ptr<expression<T>> lhs, T rhs) {
+    return std::make_shared<sub<T>>(lhs->Copy(), Number<T>(rhs));
+}
+
+template <typename T>
+std::shared_ptr<expression<T>> operator-(T lhs, std::shared_ptr<expression<T>> rhs) {
+    return std::make_shared<sub<T>>(Number<T>(lhs), rhs->Copy());
 }
 
 template <typename T>
@@ -507,14 +527,44 @@ std::shared_ptr<expression<T>> operator*(std::shared_ptr<expression<T>> lhs, std
 }
 
 template <typename T>
+std::shared_ptr<expression<T>> operator*(std::shared_ptr<expression<T>> lhs, T rhs) {
+    return std::make_shared<mul<T>>(lhs->Copy(), Number<T>(rhs));
+}
+
+template <typename T>
+std::shared_ptr<expression<T>> operator*(T lhs, std::shared_ptr<expression<T>> rhs) {
+    return std::make_shared<mul<T>>(Number<T>(lhs), rhs->Copy());
+}
+
+template <typename T>
 std::shared_ptr<expression<T>> operator/(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs) {
     return std::make_shared<div<T>>(lhs->Copy(), rhs->Copy());
+}
+
+template <typename T>
+std::shared_ptr<expression<T>> operator/(std::shared_ptr<expression<T>> lhs, T rhs) {
+    return std::make_shared<div<T>>(lhs->Copy(), Number<T>(rhs));
+}
+
+template <typename T>
+std::shared_ptr<expression<T>> operator/(T lhs, std::shared_ptr<expression<T>> rhs) {
+    return std::make_shared<div<T>>(Number<T>(lhs), rhs->Copy());
 }
 
 // a^b = exp(ln(a) * b)
 template <typename T>
 std::shared_ptr<expression<T>> operator^(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs) {
     return Exp(Ln(lhs->Copy()) * rhs->Copy());
+}
+
+template <typename T>
+std::shared_ptr<expression<T>> operator^(std::shared_ptr<expression<T>> lhs, T rhs) {
+    return Exp(Ln(lhs->Copy()) * Number<T>(rhs));
+}
+
+template <typename T>
+std::shared_ptr<expression<T>> operator^(T lhs, std::shared_ptr<expression<T>> rhs) {
+    return Exp(Ln(Number<T>(lhs)) * rhs->Copy());
 }
 
 template <typename T>
@@ -539,51 +589,56 @@ std::shared_ptr<expression<T>> Cos(std::shared_ptr<expression<T>> arg) {
 
 }
 
-int main() {
-    auto x = sympp::Symbol<long double>("x");
-    auto y = sympp::Symbol<long double>("y");
+// int main() {
+//     auto x = sympp::Symbol<long double>("x");
+//     auto y = sympp::Symbol<long double>("y");
     
-    auto z = x + y;
-    std::cout << z->String() << std::endl;
+//     auto z = x + y;
+//     std::cout << z->String() << std::endl;
     
-    auto w = z->Subs(x, sympp::Number<long double>(5))->Subs(y, sympp::Number<long double>(8));    
+//     auto w = z->Subs(x, sympp::Number<long double>(5))->Subs(y, sympp::Number<long double>(8));    
     
-    std::cout << w->String() << std::endl;
-    std::cout << w->Eval() << std::endl;
+//     std::cout << w->String() << std::endl;
+//     std::cout << w->Eval() << std::endl;
 
-    std::cout << z->String() << std::endl;
+//     std::cout << z->String() << std::endl;
     
-    auto zdx = z->Diff(x);
+//     auto zdx = z->Diff(x);
 
-    std::cout << zdx->Eval() << std::endl;
+//     std::cout << zdx->Eval() << std::endl;
 
-    auto div = x / y;
+//     auto div = x / y;
 
-    std::cout << div->String() << std::endl;
-    std::cout << div->Diff(x)->String() << std::endl;
+//     std::cout << div->String() << std::endl;
+//     std::cout << div->Diff(x)->String() << std::endl;
 
-    auto exp = sympp::Exp(z);
+//     auto exp = sympp::Exp(z);
 
-    std::cout << exp->String() << std::endl;
-    std::cout << exp->Diff(x)->String() << std::endl;
-    std::cout << exp->Subs(x, sympp::Number<long double>(2))->Subs(y, sympp::Number<long double>(5))->Eval() << std::endl;
+//     std::cout << exp->String() << std::endl;
+//     std::cout << exp->Diff(x)->String() << std::endl;
+//     std::cout << exp->Subs(x, sympp::Number<long double>(2))->Subs(y, sympp::Number<long double>(5))->Eval() << std::endl;
 
-    auto pow = x ^ z;
+//     auto pow = x ^ z;
 
-    std::cout << pow->String() << std::endl;
-    std::cout << pow->Diff(x)->String() << std::endl;
-    std::cout << pow->Subs(x, sympp::Number<long double>(2))->Subs(y, sympp::Number<long double>(5))->Eval() << std::endl;
+//     std::cout << pow->String() << std::endl;
+//     std::cout << pow->Diff(x)->String() << std::endl;
+//     std::cout << pow->Subs(x, sympp::Number<long double>(2))->Subs(y, sympp::Number<long double>(5))->Eval() << std::endl;
 
-    auto pi = sympp::Number<long double>(3.14);
-    auto sin = sympp::Sin(pi);
+//     auto pi = sympp::Number<long double>(3.14);
+//     auto sin = sympp::Sin(pi);
 
-    std::cout << sin->String() << std::endl;
-    std::cout << sin->Eval() << std::endl;
+//     std::cout << sin->String() << std::endl;
+//     std::cout << sin->Eval() << std::endl;
 
-    auto cos = sympp::Cos(x);
+//     auto cos = sympp::Cos(x);
 
-    std::cout << cos->String() << std::endl;
-    std::cout << cos->Diff(x)->String() << std::endl;
+//     std::cout << cos->String() << std::endl;
+//     std::cout << cos->Diff(x)->String() << std::endl;
 
-    return 0;
-}
+//     long double c = 5;
+//     auto expr = (x + c) / c + c;
+
+//     std::cout << expr->String() << std::endl;
+
+//     return 0;
+// }
