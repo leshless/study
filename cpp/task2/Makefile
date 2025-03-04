@@ -19,4 +19,6 @@ main.o: $(SRC_PATH)/main.cpp | $(BUILD_PATH)
 	$(CC) $(CFLAGS) $(SRC_PATH)/main.cpp -o $(BUILD_PATH)/main.o
 
 clean:
-	rm -rf $(BUILD_PATH)/main
+	rm -rf $(BUILD_PATH)/expression.o
+	rm -rf $(BUILD_PATH)/main.o
+	rm -rf main
