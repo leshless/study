@@ -191,4 +191,9 @@ std::shared_ptr<expression<T>> cos<T>::Copy() {
     return std::make_shared<cos<T>>(this->arg->Copy());
 }
 
+template class exp<long double>;
+template class ln<long double>;
+template class sin<long double>;
+template class cos<long double>;
+
 }

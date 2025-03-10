@@ -16,14 +16,14 @@ enum expression_type {
 template <typename T>
 class expression {
     public:
-    virtual ~expression() = default;
-    
-    virtual expression_type Type() = 0;
-    virtual std::string String() = 0;
-    virtual T Eval() = 0;
-    virtual std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x) = 0;
-    virtual std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e) = 0;
-    virtual std::shared_ptr<expression<T>> Copy() = 0;
+        virtual ~expression() = default;
+        
+        virtual expression_type Type() = 0;
+        virtual std::string String() = 0;
+        virtual T Eval() = 0;
+        virtual std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x) = 0;
+        virtual std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e) = 0;
+        virtual std::shared_ptr<expression<T>> Copy() = 0;
 };
 
 template <typename T>
@@ -123,6 +123,24 @@ class div : public expression <T> {
     public:
         div(std::shared_ptr<expression<T>> left, std::shared_ptr<expression<T>> right);
         ~div() = default;
+
+        expression_type Type();
+        std::string String();
+        T Eval();
+        std::shared_ptr<expression<T>> Diff(std::shared_ptr<expression<T>> x);
+        std::shared_ptr<expression<T>> Subs(std::shared_ptr<expression<T>> s, std::shared_ptr<expression<T>> e);
+        std::shared_ptr<expression<T>> Copy();
+};
+
+template <typename T>
+class pow : public expression <T> {
+    private:
+        std::shared_ptr<expression<T>> left;
+        std::shared_ptr<expression<T>> right;
+
+    public:
+        pow(std::shared_ptr<expression<T>> left, std::shared_ptr<expression<T>> right);
+        ~pow() = default;
 
         expression_type Type();
         std::string String();
@@ -252,6 +270,8 @@ std::shared_ptr<expression<T>> Sin(std::shared_ptr<expression<T>> arg);
 
 template <typename T>
 std::shared_ptr<expression<T>> Cos(std::shared_ptr<expression<T>> arg);
+
+std::shared_ptr<expression<long double>> Parse(std::string expr);
 
 }
 

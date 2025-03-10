@@ -195,4 +195,58 @@ std::shared_ptr<expression<T>> div<T>::Copy() {
     return std::make_shared<div<T>>(this->left->Copy(), this->right->Copy());
 }
 
+// POWER
+
+template <typename T>
+pow<T>::pow(std::shared_ptr<expression<T>> left, std::shared_ptr<expression<T>> right) {
+    this->left = left;
+    this->right = right;
+}
+
+template <typename T>
+expression_type pow<T>::Type() {
+    return EXPRESSION_OPERATION;
+}
+
+template <typename T>
+std::string pow<T>::String() {
+    return this->left->String() + " ^ " + this->right->String();
+}
+
+template <typename T>
+T pow<T>::Eval() {
+    return std::pow(this->left->Eval(), this->right->Eval());
+}
+
+template <typename T>
+std::shared_ptr<expression<T>> pow<T>::Diff(std::shared_ptr<expression<T>> x) {
+    if (x->Type() != EXPRESSION_SYMBOL){
+        throw std::invalid_argument("cannot differintiate by non-symbol expression " + this->String());
+    }
+
+    // a ^ b = e ^ (ln(a) * b) = e ^ (ln(a) * b) * (1/a * a' * b + b' * ln(a))
+    return Exp(Ln(this->left->Copy()) * this->right->Copy()) * 
+    (this->left->Diff(x) * this->right->Copy() / this->left->Copy() + Ln(this->left->Copy()) * this->right->Diff(x));
+}
+
+template <typename T>
+std::shared_ptr<expression<T>> pow<T>::Subs(std::shared_ptr<expression<T>> x, std::shared_ptr<expression<T>> e) {
+    if (x->Type() != EXPRESSION_SYMBOL){
+        throw std::invalid_argument("cannot substitude non-symbol expression " + this->String());
+    }
+
+    return this->left->Subs(x, e) ^ this->right->Subs(x, e);
+}
+
+template <typename T>
+std::shared_ptr<expression<T>> pow<T>::Copy() {
+    return std::make_shared<pow<T>>(this->left->Copy(), this->right->Copy());
+}
+
+template class add<long double>;
+template class sub<long double>;
+template class mul<long double>;
+template class div<long double>;
+template class pow<long double>;
+
 }

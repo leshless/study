@@ -87,17 +87,17 @@ std::shared_ptr<expression<T>> operator/(T lhs, std::shared_ptr<expression<T>> r
 // a^b = exp(ln(a) * b)
 template <typename T>
 std::shared_ptr<expression<T>> operator^(std::shared_ptr<expression<T>> lhs, std::shared_ptr<expression<T>> rhs) {
-    return Exp(Ln(lhs->Copy()) * rhs->Copy());
+    return std::make_shared<pow<T>>(lhs->Copy(), rhs->Copy());
 }
 
 template <typename T>
 std::shared_ptr<expression<T>> operator^(std::shared_ptr<expression<T>> lhs, T rhs) {
-    return Exp(Ln(lhs->Copy()) * Number<T>(rhs));
+    return std::make_shared<pow<T>>(lhs->Copy(), Number<T>(rhs));
 }
 
 template <typename T>
 std::shared_ptr<expression<T>> operator^(T lhs, std::shared_ptr<expression<T>> rhs) {
-    return Exp(Ln(Number<T>(lhs)) * rhs->Copy());
+    return std::make_shared<pow<T>>(Number<T>(lhs), rhs->Copy());
 }
 
 template <typename T>
@@ -120,7 +120,26 @@ std::shared_ptr<expression<T>> Cos(std::shared_ptr<expression<T>> arg) {
     return std::make_shared<cos<T>>(arg->Copy());
 }
 
-template std::shared_ptr<sympp::expression<long double>> sympp::Symbol<long double>(std::string);
-
+template std::shared_ptr<expression<long double>> Symbol(std::string name);
+template std::shared_ptr<expression<long double>> Number(long double value);
+template std::shared_ptr<expression<long double>> operator+(std::shared_ptr<expression<long double>> lhs, std::shared_ptr<expression<long double>> rhs);
+template std::shared_ptr<expression<long double>> operator+(std::shared_ptr<expression<long double>> lhs, long double rhs);
+template std::shared_ptr<expression<long double>> operator+(long double lhs, std::shared_ptr<expression<long double>> rhs);
+template std::shared_ptr<expression<long double>> operator-(std::shared_ptr<expression<long double>> lhs, std::shared_ptr<expression<long double>> rhs);
+template std::shared_ptr<expression<long double>> operator-(std::shared_ptr<expression<long double>> lhs, long double rhs);
+template std::shared_ptr<expression<long double>> operator-(long double lhs, std::shared_ptr<expression<long double>> rhs);
+template std::shared_ptr<expression<long double>> operator*(std::shared_ptr<expression<long double>> lhs, std::shared_ptr<expression<long double>> rhs);
+template std::shared_ptr<expression<long double>> operator*(std::shared_ptr<expression<long double>> lhs, long double rhs);
+template std::shared_ptr<expression<long double>> operator*(long double lhs, std::shared_ptr<expression<long double>> rhs);
+template std::shared_ptr<expression<long double>> operator/(std::shared_ptr<expression<long double>> lhs, std::shared_ptr<expression<long double>> rhs);
+template std::shared_ptr<expression<long double>> operator/(std::shared_ptr<expression<long double>> lhs, long double rhs);
+template std::shared_ptr<expression<long double>> operator/(long double lhs, std::shared_ptr<expression<long double>> rhs);
+template std::shared_ptr<expression<long double>> operator^(std::shared_ptr<expression<long double>> lhs, std::shared_ptr<expression<long double>> rhs);
+template std::shared_ptr<expression<long double>> operator^(std::shared_ptr<expression<long double>> lhs, long double rhs);
+template std::shared_ptr<expression<long double>> operator^(long double lhs, std::shared_ptr<expression<long double>> rhs);
+template std::shared_ptr<expression<long double>> Ln(std::shared_ptr<expression<long double>> arg);
+template std::shared_ptr<expression<long double>> Exp(std::shared_ptr<expression<long double>> arg);
+template std::shared_ptr<expression<long double>> Sin(std::shared_ptr<expression<long double>> arg);
+template std::shared_ptr<expression<long double>> Cos(std::shared_ptr<expression<long double>> arg);
 
 }

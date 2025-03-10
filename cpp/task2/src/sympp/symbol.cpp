@@ -10,7 +10,6 @@
 
 namespace sympp {
 
-
 // SYMBOL
 
 template <typename T>
@@ -65,5 +64,6 @@ std::shared_ptr<expression<T>> symbol<T>::Copy() {
     return std::make_shared<symbol<T>>(this->name);
 }
 
+template class symbol<long double>;
 
 }

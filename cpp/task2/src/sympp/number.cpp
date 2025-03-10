@@ -58,4 +58,6 @@ std::shared_ptr<expression<T>> number<T>::Copy() {
     return std::make_shared<number<T>>(this->value);
 }
 
+template class number<long double>;
+
 }
