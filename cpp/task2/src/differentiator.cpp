@@ -11,7 +11,7 @@ std::string usage = "differentiator (eval|diff) <args>";
 std::string eval_usage = "differentiator eval <expr> <symbol1>=<value1> <symbol2>=<value2> ...";
 std::string diff_usage = "differentiator diff <expr> <symbol>";
 
-std::pair <std::string, long double> parse_sub(std::string str) {
+std::pair <std::string, std::shared_ptr<sympp::expression<std::complex<long double>>>> parse_sub(std::string str) {
     auto pos = str.find("=");
 
     if (pos == std::string::npos) {
@@ -23,21 +23,24 @@ std::pair <std::string, long double> parse_sub(std::string str) {
     std::string left = str.substr(0, pos);
     std::string right = str.substr(pos+1, str.size());
 
-    long double x;
+    std::shared_ptr<sympp::expression<std::complex<long double>>> x;
     try {
-        x = stold(right);
+        x = sympp::Parse(right);
     } catch (std::exception& e) {
         std::stringstream ss;
-        ss << "Usage: " << eval_usage;
+        ss << "Couldn't parse sub: " << e.what();
         throw std::invalid_argument(ss.str());
     }
-
 
     return {left, x};
 } 
 
 int eval(int argc, char* argv[]){
     if (argc < 3) {
+        for (int i = 0; i < argc; i++) {
+            std::cout << argv[i] << std::endl;
+        }
+
         std::cout << "Usage: " << eval_usage << std::endl;
         return 1;
     }
@@ -51,7 +54,7 @@ int eval(int argc, char* argv[]){
     }
 
     for (int i = 3; i < argc; ++i) {
-        std::pair <std::string, std::complex<long double>> parsed;
+        std::pair <std::string, std::shared_ptr<sympp::expression<std::complex<long double>>>> parsed;
         try {
             parsed = parse_sub(argv[i]);
         } catch (std::exception& e) {
@@ -60,9 +63,8 @@ int eval(int argc, char* argv[]){
         }
 
         auto s = sympp::Symbol<std::complex<long double>>(parsed.first);
-        auto n = sympp::Number<std::complex<long double>>(parsed.second);
 
-        expr = expr->Subs(s, n);
+        expr = expr->Subs(s, parsed.second);
     }
 
     std::complex<long double> res;
@@ -129,7 +131,7 @@ int main(int argc, char* argv[]){
 
     if ((std::strcmp(argv[1], "eval") == 0) && (std::strcmp(argv[1], "diff") == 0)) {
         std::cout << "Usage: " << usage << std::endl;
-        return 1;
+        return 1; 
     }
 
     if ((std::strcmp(argv[1], "eval") == 0)) {

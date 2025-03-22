@@ -295,7 +295,7 @@ std::vector<token> lexify(std::string expr) {
 
     char_type cur_type = CHAR_UNSPECIFIED;
     std::string cur;
-    
+
     std::vector<token> tokens;
 
     for (int i = 0; i < expr.size(); ++i) {
@@ -305,18 +305,14 @@ std::vector<token> lexify(std::string expr) {
 
         char_type type = to_type(expr[i]);
 
-        if (cur_type == CHAR_UNSPECIFIED) {
-            cur_type = type;
-        }
-
-        if ((cur_type != type) || is_once(cur_type)){
+        if (cur_type != CHAR_UNSPECIFIED && ((cur_type != type) || is_once(cur_type))){
             token t = to_token(cur);
             tokens.push_back(t);
             
-            cur_type = type;
             cur.clear();
         }
 
+        cur_type = type;
         cur.push_back(expr[i]);
     }
 

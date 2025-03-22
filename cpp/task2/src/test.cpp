@@ -169,7 +169,7 @@ void test_parse() {
     setup_suite("parse");
 
     auto expr = Parse("exp(11x + 187y) / sin(1.1119) ^ (110 + .99cos(lambda))");
-    assert_equal<std::string>(expr->String(), "exp((11 · x + 187 · y)) / sin(1.1119) ^ (110 + 0.99 · cos(lambda))");
+    assert_equal<std::string>(expr->String(), "exp(((11,0) · x + (187,0) · y)) / sin((1.1119,0)) ^ ((110,0) + (0.99,0) · cos(lambda))");
     expr = Parse("exp(x) + ln(y) - sin(z)");
     assert_equal<std::string>(expr->String(), "(exp(x) + (ln(y) - sin(z)))");
     expr = Parse("cos(x) * exp(y)");
@@ -177,19 +177,19 @@ void test_parse() {
     expr = Parse("ln(exp(x))");
     assert_equal<std::string>(expr->String(), "ln(exp(x))");
     expr = Parse("sin(3 * x + 4) / cos(y - 2)");
-    assert_equal<std::string>(expr->String(), "sin((3 · x + 4)) / cos((y - 2))");
+    assert_equal<std::string>(expr->String(), "sin(((3,0) · x + (4,0))) / cos((y - (2,0)))");
     expr = Parse("exp(ln(x) + sin(y))");
     assert_equal<std::string>(expr->String(), "exp((ln(x) + sin(y)))");
     expr = Parse("sin(x)^2 + cos(y)^3");
-    assert_equal<std::string>(expr->String(), "(sin(x) ^ 2 + cos(y) ^ 3)");
+    assert_equal<std::string>(expr->String(), "(sin(x) ^ (2,0) + cos(y) ^ (3,0))");
     expr = Parse("2 * sin(x) + 3 * cos(y)");
-    assert_equal<std::string>(expr->String(), "(2 · sin(x) + 3 · cos(y))");
+    assert_equal<std::string>(expr->String(), "((2,0) · sin(x) + (3,0) · cos(y))");
     expr = Parse("ln(-1*x) + exp(-0.5*y)");
-    assert_equal<std::string>(expr->String(), "(ln((0 - 1 · x)) + exp((0 - 0.5 · y)))");
+    assert_equal<std::string>(expr->String(), "(ln(((0,0) - (1,0) · x)) + exp(((0,0) - (0.5,0) · y)))");
     expr = Parse("exp(sin(x) + ln(y))");
     assert_equal<std::string>(expr->String(), "exp((sin(x) + ln(y)))");
     expr = Parse("exp(3.14 * x) + cos(2.71 * y)");
-    assert_equal<std::string>(expr->String(), "(exp(3.14 · x) + cos(2.71 · y))");
+    assert_equal<std::string>(expr->String(), "(exp((3.14,0) · x) + cos((2.71,0) · y))");
 
 }
 
