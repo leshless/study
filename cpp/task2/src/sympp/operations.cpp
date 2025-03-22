@@ -169,7 +169,25 @@ std::string div<T>::String() {
 
 template <typename T>
 T div<T>::Eval() {
-    return this->left->Eval() / this->right->Eval();
+    auto x = this->right->Eval();
+
+    if constexpr (std::is_same<T, long double>::value) {
+        long double xr = x;
+        
+        if (xr <= 1e-10) {
+            throw std::invalid_argument("division by zero");
+        }
+    }
+    if constexpr (std::is_same<T, std::complex<long double>>::value) {
+        std::complex<long double> xc = x;
+      
+        if (std::abs(xc.real()) < 1e-10 && std::abs(xc.imag()) < 1e-10) {
+            throw std::invalid_argument("division by zero");
+        }
+    }
+
+
+    return this->left->Eval() / x;
 }
 
 template <typename T>
@@ -248,5 +266,11 @@ template class sub<long double>;
 template class mul<long double>;
 template class div<long double>;
 template class pow<long double>;
+
+template class add<std::complex<long double>>;
+template class sub<std::complex<long double>>;
+template class mul<std::complex<long double>>;
+template class div<std::complex<long double>>;
+template class pow<std::complex<long double>>;
 
 }

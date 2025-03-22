@@ -59,5 +59,6 @@ std::shared_ptr<expression<T>> number<T>::Copy() {
 }
 
 template class number<long double>;
+template class number<std::complex<long double>>;
 
 }

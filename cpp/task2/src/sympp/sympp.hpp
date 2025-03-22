@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <complex>
 
 namespace sympp {
 
@@ -271,7 +272,7 @@ std::shared_ptr<expression<T>> Sin(std::shared_ptr<expression<T>> arg);
 template <typename T>
 std::shared_ptr<expression<T>> Cos(std::shared_ptr<expression<T>> arg);
 
-std::shared_ptr<expression<long double>> Parse(std::string expr);
+std::shared_ptr<expression<std::complex<long double>>> Parse(std::string expr);
 
 }
 

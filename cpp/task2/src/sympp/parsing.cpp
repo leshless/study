@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <complex>
 #include <unordered_map>
 
 #include "sympp.hpp"
@@ -14,6 +15,7 @@ enum char_type {
     CHAR_UNSPECIFIED,          // dummy
     CHAR_LETTER,               // eg: "a", "b", "x"
     CHAR_DIGIT,                // eg: "0", "5", "."
+    CHAR_IMAG,                    // I
     CHAR_POW,                  // "^"
     CHAR_MUL,                  // "*"
     CHAR_DIV,                  // "/"
@@ -33,6 +35,8 @@ bool is_digit(char x) {
 
 char_type to_type(char x) {
     switch (x) {
+    case 'I':
+        return CHAR_IMAG;
     case '^':
         return CHAR_POW;
     case '*':
@@ -64,6 +68,8 @@ char_type to_type(char x) {
 
 bool is_once(char_type t) {
     switch (t){
+    case CHAR_IMAG:
+        return true;
     case CHAR_POW:
         return true;
     case CHAR_MUL:
@@ -89,6 +95,7 @@ enum token_family_type {
     TOKEN_FAMILY_UNSPECIFIED,          // dummy
     TOKEN_FAMILY_SYMBOL,               // eg: "x"
     TOKEN_FAMILY_NUMBER,               // eg: "1337.420"
+    TOKEN_FAMILY_IMAG,                 // I
     TOKEN_FAMILY_OPERATION,            // eg: "^"
     TOKEN_FAMILY_FUNCTION,             // eg: "ln"
     TOKEN_FAMILY_PAR_LEFT,             // "("
@@ -99,6 +106,7 @@ enum token_type {
     TOKEN_UNSPECIFIED,          // dummy
     TOKEN_SYMBOL,               // eg: "x"
     TOKEN_NUMBER,               // eg: "1337.420"
+    TOKEN_IMAG,                 // I
     TOKEN_POW,                  // "^"
     TOKEN_MUL,                  // "*"
     TOKEN_DIV,                  // "/"
@@ -122,6 +130,9 @@ token_family_type to_family_type(token_type tt) {
     
     case TOKEN_NUMBER:
         return TOKEN_FAMILY_NUMBER;
+    
+    case TOKEN_IMAG:
+        return TOKEN_FAMILY_IMAG;
     
     case TOKEN_POW:
         return TOKEN_FAMILY_OPERATION;
@@ -192,6 +203,8 @@ size_t to_prescence(token_type tt) {
         return 5;
     case TOKEN_NUMBER:
         return 5;
+    case TOKEN_IMAG:
+        return 5;
 
     default:
         break;
@@ -227,6 +240,8 @@ token to_token(std::string str) {
         return token{TOKEN_PAR_LEFT, str};
     case CHAR_PAR_RIGHT:
         return token{TOKEN_PAR_RIGHT, str};
+    case CHAR_IMAG:
+        return token{TOKEN_IMAG, str};
     case CHAR_DIGIT:
         for (size_t i = 0; i < str.size(); i++) {
             if (!is_digit(str[i])){
@@ -327,6 +342,9 @@ std::vector<token> lexify(std::string expr) {
                 break;
             case TOKEN_FAMILY_NUMBER:
                 throw std::invalid_argument("wrong neighbour tokens: " + tokens[i].instance + " and " + tokens[i+1].instance);
+            case TOKEN_FAMILY_IMAG:
+                tokens_.push_back(token{TOKEN_MUL, "*"});
+                break;
             case TOKEN_FAMILY_OPERATION:
                 break;
             case TOKEN_FAMILY_FUNCTION:
@@ -350,6 +368,9 @@ std::vector<token> lexify(std::string expr) {
             case TOKEN_FAMILY_NUMBER:
                 tokens_.push_back(token{TOKEN_MUL, "*"});
                 break;
+            case TOKEN_FAMILY_IMAG:
+                tokens_.push_back(token{TOKEN_MUL, "*"});
+                break;
             case TOKEN_FAMILY_OPERATION:
                 break;
             case TOKEN_FAMILY_FUNCTION:
@@ -371,6 +392,8 @@ std::vector<token> lexify(std::string expr) {
                 break;
             case TOKEN_FAMILY_NUMBER:
                 break;
+            case TOKEN_FAMILY_IMAG:
+                break;
             case TOKEN_FAMILY_OPERATION:
                 throw std::invalid_argument("wrong neighbour tokens: " + tokens[i].instance + " and " + tokens[i+1].instance);
             case TOKEN_FAMILY_FUNCTION:
@@ -389,6 +412,8 @@ std::vector<token> lexify(std::string expr) {
             case TOKEN_FAMILY_SYMBOL:
                 throw std::invalid_argument("wrong neighbour tokens: " + tokens[i].instance + " and " + tokens[i+1].instance);
             case TOKEN_FAMILY_NUMBER:
+                throw std::invalid_argument("wrong neighbour tokens: " + tokens[i].instance + " and " + tokens[i+1].instance);
+            case TOKEN_FAMILY_IMAG:
                 throw std::invalid_argument("wrong neighbour tokens: " + tokens[i].instance + " and " + tokens[i+1].instance);
             case TOKEN_FAMILY_OPERATION:
                 throw std::invalid_argument("wrong neighbour tokens: " + tokens[i].instance + " and " + tokens[i+1].instance);
@@ -410,6 +435,8 @@ std::vector<token> lexify(std::string expr) {
             case TOKEN_FAMILY_SYMBOL:
                 break;
             case TOKEN_FAMILY_NUMBER:
+                break;
+            case TOKEN_FAMILY_IMAG:
                 break;
             case TOKEN_FAMILY_OPERATION:
                 if (tokens[i+1].type == TOKEN_SUB) {
@@ -438,6 +465,9 @@ std::vector<token> lexify(std::string expr) {
                 tokens_.push_back(token{TOKEN_MUL, "*"});
                 break;
             case TOKEN_FAMILY_NUMBER:
+                tokens_.push_back(token{TOKEN_MUL, "*"});
+                break;
+            case TOKEN_FAMILY_IMAG:
                 tokens_.push_back(token{TOKEN_MUL, "*"});
                 break;
             case TOKEN_FAMILY_OPERATION:
@@ -477,10 +507,10 @@ std::vector<token> lexify(std::string expr) {
     return tokens_;
 }
 
-std::shared_ptr<sympp::expression<long double>> parse(std::vector<token>& tokens, int i, int j){
+std::shared_ptr<sympp::expression<std::complex<long double>>> parse(std::vector<token>& tokens, int i, int j){
     // phase 0: for unary minus: return 0, eg (-x + y) -> ((0 - x) + y) 
     if (j < i) {
-        return sympp::Number<long double>(0);
+        return sympp::Number<std::complex<long double>>(0);
     }
 
     // phase 1: remove parentheses in the begin and in the end
@@ -523,11 +553,14 @@ std::shared_ptr<sympp::expression<long double>> parse(std::vector<token>& tokens
     long double x;
     switch (t){
     case TOKEN_SYMBOL:
-        return sympp::Symbol<long double>(tokens[p].instance);
+        return sympp::Symbol<std::complex<long double>>(tokens[p].instance);
 
     case TOKEN_NUMBER:
         x = std::stold(tokens[p].instance, NULL);
-        return sympp::Number<long double>(x);
+        return sympp::Number<std::complex<long double>>(x);
+
+    case TOKEN_IMAG:
+        return sympp::Number<std::complex<long double>>(std::complex<long double> {0.0, 1});
 
     case TOKEN_POW:
         return parse(tokens, i, p-1) ^ parse(tokens, p+1, j);    
@@ -568,7 +601,7 @@ std::shared_ptr<sympp::expression<long double>> parse(std::vector<token>& tokens
 
 namespace sympp {
 
-std::shared_ptr<expression<long double>> Parse(std::string expr){
+std::shared_ptr<expression<std::complex<long double>>> Parse(std::string expr){
     std::vector<parsing::token> tokens;
 
     try {

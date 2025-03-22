@@ -30,7 +30,24 @@ std::string ln<T>::String() {
 
 template <typename T>
 T ln<T>::Eval() {
-    return std::log(this->arg->Eval());
+    auto x = this->arg->Eval();
+
+    if constexpr (std::is_same<T, long double>::value) {
+        long double xr = x;
+
+        if (xr <= 1e-10) {
+            throw std::invalid_argument("non-positive real logarithm argument");
+        }
+    }
+    if constexpr (std::is_same<T, std::complex<long double>>::value) {
+        std::complex<long double> xc = x;
+
+        if (std::abs(xc.real()) < 1e-10 && std::abs(xc.imag()) < 1e-10) {
+            throw std::invalid_argument("zero complex logarithm argument");
+        }
+    }
+
+    return std::log(x);
 }
 
 template <typename T>
@@ -195,5 +212,10 @@ template class exp<long double>;
 template class ln<long double>;
 template class sin<long double>;
 template class cos<long double>;
+
+template class exp<std::complex<long double>>;
+template class ln<std::complex<long double>>;
+template class sin<std::complex<long double>>;
+template class cos<std::complex<long double>>;
 
 }

@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <string>
 #include <cstring>
+#include <complex>
 
 #include "sympp/sympp.hpp"
 
@@ -41,7 +42,7 @@ int eval(int argc, char* argv[]){
         return 1;
     }
 
-    std::shared_ptr<sympp::expression<long double>> expr;
+    std::shared_ptr<sympp::expression<std::complex<long double>>> expr;
     try {
         expr = sympp::Parse(argv[2]);
     } catch (std::exception& e) {
@@ -50,7 +51,7 @@ int eval(int argc, char* argv[]){
     }
 
     for (int i = 3; i < argc; ++i) {
-        std::pair <std::string, long double> parsed;
+        std::pair <std::string, std::complex<long double>> parsed;
         try {
             parsed = parse_sub(argv[i]);
         } catch (std::exception& e) {
@@ -58,13 +59,13 @@ int eval(int argc, char* argv[]){
             return 1;
         }
 
-        auto s = sympp::Symbol<long double>(parsed.first);
-        auto n = sympp::Number<long double>(parsed.second);
+        auto s = sympp::Symbol<std::complex<long double>>(parsed.first);
+        auto n = sympp::Number<std::complex<long double>>(parsed.second);
 
         expr = expr->Subs(s, n);
     }
 
-    long double res;
+    std::complex<long double> res;
     try {
         res = expr->Eval();
     } catch (std::exception& e) {
@@ -83,7 +84,7 @@ int diff(int argc, char* argv[]){
         return 1;
     }
 
-    std::shared_ptr<sympp::expression<long double>> expr;
+    std::shared_ptr<sympp::expression<std::complex<long double>>> expr;
     try {
         expr = sympp::Parse(argv[2]);
     } catch (std::exception& e) {
@@ -91,15 +92,15 @@ int diff(int argc, char* argv[]){
         return 1;
     }
 
-    std::shared_ptr<sympp::expression<long double>> var;
+    std::shared_ptr<sympp::expression<std::complex<long double>>> var;
     try {
-        var = sympp::Symbol<long double>(argv[3]);
+        var = sympp::Symbol<std::complex<long double>>(argv[3]);
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
         return 1;
     }
 
-    std::shared_ptr<sympp::expression<long double>> diff;
+    std::shared_ptr<sympp::expression<std::complex<long double>>> diff;
     try {
         diff = expr->Diff(var);
     } catch (std::exception& e) {

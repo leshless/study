@@ -65,5 +65,6 @@ std::shared_ptr<expression<T>> symbol<T>::Copy() {
 }
 
 template class symbol<long double>;
+template class symbol<std::complex<long double>>;
 
 }

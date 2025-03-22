@@ -142,4 +142,27 @@ template std::shared_ptr<expression<long double>> Exp(std::shared_ptr<expression
 template std::shared_ptr<expression<long double>> Sin(std::shared_ptr<expression<long double>> arg);
 template std::shared_ptr<expression<long double>> Cos(std::shared_ptr<expression<long double>> arg);
 
+template std::shared_ptr<expression<std::complex<long double>>> Symbol(std::string name);
+template std::shared_ptr<expression<std::complex<long double>>> Number(std::complex<long double> value);
+template std::shared_ptr<expression<std::complex<long double>>> operator+(std::shared_ptr<expression<std::complex<long double>>> lhs, std::shared_ptr<expression<std::complex<long double>>> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator+(std::shared_ptr<expression<std::complex<long double>>> lhs, std::complex<long double> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator+(std::complex<long double> lhs, std::shared_ptr<expression<std::complex<long double>>> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator-(std::shared_ptr<expression<std::complex<long double>>> lhs, std::shared_ptr<expression<std::complex<long double>>> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator-(std::shared_ptr<expression<std::complex<long double>>> lhs, std::complex<long double> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator-(std::complex<long double> lhs, std::shared_ptr<expression<std::complex<long double>>> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator*(std::shared_ptr<expression<std::complex<long double>>> lhs, std::shared_ptr<expression<std::complex<long double>>> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator*(std::shared_ptr<expression<std::complex<long double>>> lhs, std::complex<long double> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator*(std::complex<long double> lhs, std::shared_ptr<expression<std::complex<long double>>> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator/(std::shared_ptr<expression<std::complex<long double>>> lhs, std::shared_ptr<expression<std::complex<long double>>> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator/(std::shared_ptr<expression<std::complex<long double>>> lhs, std::complex<long double> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator/(std::complex<long double> lhs, std::shared_ptr<expression<std::complex<long double>>> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator^(std::shared_ptr<expression<std::complex<long double>>> lhs, std::shared_ptr<expression<std::complex<long double>>> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator^(std::shared_ptr<expression<std::complex<long double>>> lhs, std::complex<long double> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> operator^(std::complex<long double> lhs, std::shared_ptr<expression<std::complex<long double>>> rhs);
+template std::shared_ptr<expression<std::complex<long double>>> Ln(std::shared_ptr<expression<std::complex<long double>>> arg);
+template std::shared_ptr<expression<std::complex<long double>>> Exp(std::shared_ptr<expression<std::complex<long double>>> arg);
+template std::shared_ptr<expression<std::complex<long double>>> Sin(std::shared_ptr<expression<std::complex<long double>>> arg);
+template std::shared_ptr<expression<std::complex<long double>>> Cos(std::shared_ptr<expression<std::complex<long double>>> arg);
+
+
 }
