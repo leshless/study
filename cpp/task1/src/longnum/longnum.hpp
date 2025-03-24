@@ -69,9 +69,9 @@ public:
     static LongNum from_string(std::string str, const std::optional<unsigned>& precision = std::nullopt);
 };
 
-LongNum operator""_longnum(unsigned long long number);
-LongNum operator""_longnum(long double number);
-LongNum operator""_longnum(const char* number, std::size_t len);
+LongNum operator""_ln(unsigned long long number);
+LongNum operator""_ln(long double number);
+LongNum operator""_ln(const char* number, std::size_t len);
 
 std::istream& operator>>(std::istream& stream, LongNum& number);
 std::ostream& operator<<(std::ostream& stream, const LongNum& number);

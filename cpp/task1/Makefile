@@ -25,6 +25,14 @@ pi: pi.o $(OBJECTS) | $(BUILD_PATH)
 pi.o: $(SRC_PATH)/pi.cpp | $(BUILD_PATH)
 	$(CC) $(CFLAGS) $(SRC_PATH)/pi.cpp -o $(BUILD_PATH)/pi.o
 
+test: test.o $(OBJECTS) | $(BUILD_PATH)
+	$(CC) $(BUILD_PATH)/test.o $(OBJECTS) -o test
+	./test
+
+test.o: $(SRC_PATH)/test.cpp | $(BUILD_PATH)
+	$(CC) $(CFLAGS) $(SRC_PATH)/test.cpp -o $(BUILD_PATH)/test.o
+
+
 $(BUILD_PATH)/%.o: $(SRC_PATH)/longnum/%.cpp | $(BUILD_PATH)
 	$(CC) $(CFLAGS) $< -o $@
 

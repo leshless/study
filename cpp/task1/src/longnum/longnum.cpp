@@ -141,7 +141,7 @@ LongNum operator>>(const LongNum& number, const unsigned shift) {
     }
     const unsigned to_erase = shift / BASE;
     if (to_erase >= number.chunks.size()) {
-        return (0_longnum).with_precision(number.exp);
+        return (0_ln).with_precision(number.exp);
     }
     std::vector<uint32_t> chunks(number.chunks.size() - to_erase);
     const unsigned r = shift % BASE;
@@ -201,7 +201,7 @@ LongNum& LongNum::operator-=(const LongNum& rhs) {
         return *this;
     }
     if (*this == rhs) {
-        *this = (0_longnum).with_precision(std::max(exp, rhs.exp));
+        *this = (0_ln).with_precision(std::max(exp, rhs.exp));
         return *this;
     }
     if (sign != rhs.sign) {
@@ -245,7 +245,7 @@ LongNum& LongNum::operator*=(const LongNum& rhs) {
 
 LongNum operator*(const LongNum& lhs, const LongNum& rhs) {
     if (lhs == 0 || rhs == 0) {
-        return (0_longnum).with_precision(std::max(lhs.exp, rhs.exp));
+        return (0_ln).with_precision(std::max(lhs.exp, rhs.exp));
     }
     LongNum res;
     res.exp = lhs.exp + rhs.exp;
@@ -346,7 +346,7 @@ LongNum operator/(LongNum lhs, const LongNum& rhs) {
         throw std::invalid_argument("Division by zero");
     }
     if (lhs == 0) {
-        return (0_longnum).with_precision(std::max(lhs.exp, rhs.exp));
+        return (0_ln).with_precision(std::max(lhs.exp, rhs.exp));
     }
     if (lhs.exp < rhs.exp) {
         lhs <<= 2 * rhs.exp - lhs.exp;
@@ -355,7 +355,7 @@ LongNum operator/(LongNum lhs, const LongNum& rhs) {
     }
     if (lhs.chunks.size() < rhs.chunks.size() ||
         (lhs.chunks.size() == rhs.chunks.size() && lhs.chunks.back() < rhs.chunks.back())) {
-        return (0_longnum).with_precision(std::max(lhs.exp, rhs.exp));
+        return (0_ln).with_precision(std::max(lhs.exp, rhs.exp));
     }
     LongNum res;
     if (rhs.chunks.size() == 1) {
@@ -579,15 +579,15 @@ LongNum LongNum::from_string(std::string str, const std::optional<unsigned>& pre
     return res;
 }
 
-LongNum operator""_longnum(const long double number) {
+LongNum operator""_ln(const long double number) {
     return LongNum::from_string(std::to_string(number));
 }
 
-LongNum operator""_longnum(const unsigned long long number) {
+LongNum operator""_ln(const unsigned long long number) {
     return LongNum(number);
 }
 
-LongNum operator""_longnum(const char* number, std::size_t len) {
+LongNum operator""_ln(const char* number, std::size_t len) {
     return LongNum::from_string(std::string(number, len));
 };
 
@@ -604,14 +604,14 @@ std::ostream& operator<<(std::ostream& stream, const LongNum& number) {
 
 LongNum calculate_pi(const unsigned precision) {
     LongNum k = 1;
-    LongNum a_k = (1_longnum).with_precision(precision);
-    LongNum a_sum = (1_longnum).with_precision(precision);
+    LongNum a_k = (1_ln).with_precision(precision);
+    LongNum a_sum = (1_ln).with_precision(precision);
     LongNum b_sum = 0;
 
     const LongNum C = 640320;
     const LongNum C3_OVER_24 = C.pow(3) / 24;
 
-    while (a_k != 0_longnum) {
+    while (a_k != 0_ln) {
         a_k *= -(6 * k - 5) * (2 * k - 1) * (6 * k - 1);
         a_k /= k.pow(3) * C3_OVER_24;
         a_sum += a_k;
@@ -620,7 +620,7 @@ LongNum calculate_pi(const unsigned precision) {
     }
 
     LongNum total = a_sum * 13591409 + b_sum * 545140134;
-    LongNum pi = (426880 * (10005_longnum).with_precision(precision).sqrt()) / total;
+    LongNum pi = (426880 * (10005_ln).with_precision(precision).sqrt()) / total;
     
     return pi;
 }
