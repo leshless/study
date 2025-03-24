@@ -1,7 +1,7 @@
 Name: texlive-hebdomon
 Summary: A document class for report writing in university settings
 License: LPPL1.3
-Version: 2.11
+Version: 0.1
 Release: 1
 URL: https://www.ctan.org/tex-archive/macros/latex/contrib/hebdomon
 Group: Publishing
