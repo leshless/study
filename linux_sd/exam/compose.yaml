@@ -1,0 +1,11 @@
+services:
+  texlive-count1to:
+    build:
+      args:
+        PACKAGE: "count1to"
+        ARCH: "noarch"
+  texlive-hebdomon:
+    build:
+      args:
+        PACKAGE: "hebdomon"
+        ARCH: "noarch"

@@ -41,7 +41,7 @@
     "algebra/(27.11) Основная теорема Алгебры.md": "3f3b24cb3b779719160abf6420b1233bf89b286d6ae71037daf07fbc2aa554a1",
     "calculus/(29.11) Основные функции.md": "87d3231b9648b54be341b267c098fc1c90c94d34bdcfee49f22d75ad5da9074a",
     "algebra/(11.12) Декартова система координат.md": "26a0342f7aad68b5e6ce53c320ac8e9b00c6646f836ee557eac5d95a94a36b3e",
-    "algebra/(18.12) Элементы общей алгебры.md": "be466645ed62067e4380488b8b9299461d7e3f14e5947c0e6b8af4826860b4c6",
+    "algebra/(18.12) Элементы общей алгебры.md": "d17fc07ef912b040a40c69948428a94fe4de5af3b3a6a89b7d1718d78f411984",
     "calculus/(10.01) Теорема Коши.md": "75d502aa929c02105fd90c9cf3e48424143b7ea19c10b5ce7acd58dd08ae978c",
     "discrete/(10.01) Декартово произведение.md": "58bc5d69ce92c491b14865d90dcd0c517c2d8e29dd4ddf71bda5b4cde4f7aa05",
     "discrete/(17.01) Композиция.md": "3c24ea87692dfeacc91d7b2bc8101653b9ca183bc58b948ef4a470fbc99dd1d7",
@@ -56,6 +56,8 @@
     "dfd.md": "8f32293016442e24ff0a2566cde16d538679970ce037038ca30e95762c2eb676",
     "algebra/(05.03) Кольца.md": "84d6d5eb60b3b79d6f3d6c6948a23bff75b2a893c34fc98757ced9efcb30138b",
     "calculus/(07.03) Числовые ряды.md": "e8428d46ac33ceb93a54779d962b5848746ffb28cfe14afa75a662b5f4210f20",
-    "discrete/(07.03).md": "5af9c17101c15d08da0fb69735b7b4bb4fcb7129d38151db2b321f1c70f1eeb0"
+    "discrete/(07.03).md": "5af9c17101c15d08da0fb69735b7b4bb4fcb7129d38151db2b321f1c70f1eeb0",
+    "algebra/(12.03) Поля.md": "9e939979d734af5c14d48afd101c45d2134b63218e7a54d58772adc3855b2e47",
+    "algebra/(19.03) Линейная алгебра.md": "2ce3a6670538b9d7376782c2e95ea05f339b8b662ad8c668a588184623d7fe9f"
   }
 }
