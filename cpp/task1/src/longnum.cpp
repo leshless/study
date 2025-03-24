@@ -1,373 +1,603 @@
-#include <vector>
-#include <algorithm>
-#include <cmath>
-#include <iostream>
-
 #include "longnum.hpp"
+#include <algorithm>
+#include <utility>
+#include <stdexcept>
+#include <algorithm>
+#include <compare>
+#include <bit>
 
-const size_t CHUNK_SIZE = 16;
-const size_t INIT_PRECISION = 64;
+constexpr unsigned BASE = 32;
+constexpr unsigned DEFAULT_PRECISION = 64;
 
-void longnum::resize(size_t new_size) {
-    size_t size = this->chunks.size();
-
-    if (size == new_size) {
-        return;
-    }else if (size > new_size) {
-        throw "The new size cannot be less than previous one";
-    }
-    
-    this->chunks.resize(new_size);
+LongNum::LongNum(const bool _is_negative, const unsigned _exp, std::vector<uint32_t>& _limbs)
+    : is_negative(_is_negative),
+      exp(_exp),
+      limbs(std::move(_limbs)) {
 }
 
-void longnum::lshift(size_t offset) {
-    if (offset == 0) {
-        return;
-    }
-
-    size_t size = this->chunks.size();
-    int q = offset / CHUNK_SIZE;
-    int r = offset % CHUNK_SIZE;
-
-    // Resize here to make sure that we won't overflow
-    size_t new_size = size + q + (r == 0 ? 0 : 1);
-    this->resize(new_size);
-
-    for (int i = new_size - 1; i >= 0; i--){
-        // Two adjacent chunks, whe are interested in
-        uint16_t lb = (i - q >= 0 ? this->chunks[i - q] : 0);
-        uint16_t rb = (i - q - 1 >= 0 ? this->chunks[i - q - 1] : 0);
-        
-        this->chunks[i] = (lb << r) | (rb >> (CHUNK_SIZE - r));
-    }   
-}
-
-void longnum::rshift(size_t offset) {
-    if (offset == 0) {
+LongNum::LongNum(unsigned long long x) {
+    if (x == 0) {
         return;
     }
-
-    size_t size = this->chunks.size();
-    size_t q = offset / CHUNK_SIZE;
-    size_t r = offset % CHUNK_SIZE;
-
-    for (size_t i = 0; i < size; ++i){
-        // Two adjacent chunks, whe are interested in
-        uint16_t rb = (i + q < size ? this->chunks[i + q] : 0);
-        uint16_t lb = (i + q + 1 < size ? this->chunks[i + q + 1] : 0);
-
-        this->chunks[i] = (lb << (CHUNK_SIZE - r)) | (rb >> r);
-    }  
-
-    this->pretify();
-}
-
-longnum longnum::floor() {
-    longnum before = *this;
-    before.set_precision(0);
-
-    return before;
-}
-
-void longnum::align(longnum& other) {
-    size_t precision = std::max(this->precision, other.precision);
-    this->set_precision(precision);
-    other.set_precision(precision);
-    
-    size_t size = std::max(this->chunks.size(), other.chunks.size());
-    this->resize(size);
-    other.resize(size);
-}
-
-bool longnum::less_abs(const longnum& other) {
-    longnum a = *this;
-    longnum b = other;
-    a.align(b);
-
-    for (int i = a.chunks.size()-1; i >= 0; i--){
-        if (a.chunks[i] != b.chunks[i]){
-            return (a.chunks[i] < b.chunks[i]);
-        }
-    }
-
-    return false;
-}
-
-bool longnum::is_zero(void) {
-    for (size_t i = 0; i < this->chunks.size(); ++i){
-        if (this->chunks[i] != 0){
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-void longnum::pretify(void) {
-    size_t mn = this->precision / CHUNK_SIZE + 1;
-
-    while (this->chunks.size() > 1 && this->chunks.size() > mn && this->chunks.back() == 0) {
-        this->chunks.pop_back();
+    while (x) {
+        limbs.push_back(x & UINT32_MAX);
+        x >>= BASE;
     }
 }
 
-void longnum::set_precision(size_t new_precision) {
-    size_t precision = this->precision;
-
-    size_t offset;
-    if (new_precision > precision) {
-        offset = new_precision - precision;
-        this->lshift(offset);
-    }else{
-        offset = precision - new_precision;
-        this->rshift(offset);
+LongNum::LongNum(long long x) {
+    if (x == 0) {
+        return;
     }
-
-    this->precision = new_precision;
+    is_negative = x < 0;
+    x = std::abs(x);
+    while (x) {
+        limbs.push_back(x & UINT32_MAX);
+        x >>= BASE;
+    }
 }
 
-std::string longnum::to_string(){
-    longnum ten = longnum(10);
-
-    longnum before = this->floor();
-    longnum after = *this - before;
-    after.pretify();
-
-    std::string before_res;
-    while (!before.is_zero()) {
-        longnum cur = before / ten;
-        cur = cur.floor();
-
-        longnum rem = before - (cur * ten);
-        before_res.push_back('0' + rem.chunks[rem.precision / CHUNK_SIZE]);
-
-        before = cur;
+bool operator==(const LongNum& lhs, const LongNum& rhs) {
+    if (lhs.limbs.empty() || rhs.limbs.empty()) {  // when lhs = 0 or rhs = 0
+        return lhs.limbs.empty() && rhs.limbs.empty();
     }
-
-    if (before_res == ""){
-        before_res = "0";
-    }
-
-    std::reverse(before_res.begin(), before_res.end());
-
-    std::string after_res;
-    while (!after.is_zero()) {
-        longnum cur = after * ten;
-        longnum rem = cur.floor();
-
-        after_res.push_back('0' + rem.chunks[rem.precision / CHUNK_SIZE]);
-
-        after = cur - rem;
-    }
-
-    if (this->sign) {
-        return "-" + before_res + "." + after_res;
-    }
-
-    return before_res + "." + after_res;
-}
-
-longnum operator-(const longnum& num) {
-    longnum numc = num;
-    numc.sign = !numc.sign;
-
-    return numc;
-}
-
-longnum operator+(const longnum& lhs, const longnum& rhs) {
-    longnum a = lhs;
-    longnum b = rhs;
-    a.align(b);
-    
-    if (a.sign != b.sign){
-        // Subtract the one which abs value is less from the others
-        if (a.less_abs(b)) {
-            std::swap(a, b);
-        }
-
-        uint32_t carry = 0;
-        for (size_t i = 0; i < a.chunks.size(); ++i){
-            if ((uint32_t)a.chunks[i] < (uint32_t)b.chunks[i] + carry){
-                a.chunks[i] = ((uint32_t)1 << CHUNK_SIZE) + (uint32_t)a.chunks[i] - (uint32_t)b.chunks[i] - carry;
-                carry = 1;
-            }else {
-                a.chunks[i] = (uint32_t)a.chunks[i] - (uint32_t)b.chunks[i] - carry;
-                carry = 0;
-            }
-        }
-    }else {
-        // Just sum second and first
-        uint32_t carry = 0;
-        for (size_t i = 0; i < a.chunks.size(); ++i){
-            uint32_t res = (uint32_t)a.chunks[i] + (uint32_t)b.chunks[i] + carry;
-            
-            a.chunks[i] = (res << CHUNK_SIZE) >> CHUNK_SIZE;
-            carry = res >> CHUNK_SIZE;
-        }
-        
-        if (carry) {
-            a.chunks.push_back(carry);
-        }
-    }
-
-    a.pretify();
-
-    return a;
-}
-
-longnum operator-(const longnum& lhs, const longnum& rhs) {
-    // Already implemented in '+' operator
-    return lhs + (-rhs);
-}
-
-longnum operator*(const longnum& lhs, const longnum& rhs) {
-    longnum a = lhs;
-    longnum b = rhs;
-    a.align(b);
-
-    longnum res = longnum();
-    res.resize(a.chunks.size() + b.chunks.size());
-    res.precision = a.precision + b.precision;
-    res.sign = a.sign != b.sign;
-
-    for (size_t i = 0; i < a.chunks.size(); ++i) {
-        uint32_t carry = 0;
-
-        for (size_t j = 0; j < b.chunks.size() || carry; ++j) {
-            if (j < b.chunks.size()) {
-                const uint32_t prod = (uint32_t)a.chunks[i] * (uint32_t)b.chunks[j] + (uint32_t)res.chunks[i + j] + carry;
-                res.chunks[i + j] = ((prod << CHUNK_SIZE) >> CHUNK_SIZE);
-                carry = prod >> CHUNK_SIZE;
-            } else {
-                res.chunks[i + j] += carry;
-                carry = 0;
-            }
-        }
-    }
-
-    res.set_precision(std::max(a.precision, b.precision));
-    res.pretify();
-
-    return res;
-}
-
-longnum operator/(longnum lhs, longnum rhs) {
-    if (rhs.is_zero()) {
-        throw "Division by zero is not allowed";
-    }
-
-    if (lhs.is_zero()) {
-        return lhs;
-    }
-
-    lhs.align(rhs);
-    lhs.lshift(lhs.precision * CHUNK_SIZE);
-    
-    longnum res = longnum(0);
-    res.align(rhs);
-    res.sign = lhs.sign != rhs.sign;
-    
-    longnum rem = longnum(0);
-
-    lhs.sign = 0;
-    rhs.sign = 0;
-    
-    for (int i = lhs.chunks.size() * CHUNK_SIZE - 1; i >= 0; --i) {
-        size_t q = i / CHUNK_SIZE;
-        size_t r = i % CHUNK_SIZE;
-
-        rem.lshift(1);
-        rem.chunks[rem.precision * CHUNK_SIZE] |= (lhs.chunks[q] >> r ? 1 : 0);
-
-        if (rem > rhs) {
-            rem = rem - rhs;
-            res.chunks[q] |= (1 << r);
-        }
-    }
-
-    res.pretify();
-
-    return res;
-}
-
-longnum operator""_ln(long double num) {
-    bool sign = (num < 0);
-    num = std::abs(num);
-
-    long long before = floor(num);
-    long double after = num - before;
-
-    std::vector<uint16_t> before_res;
-    while (before > 0){
-        before_res.push_back(before % (1 << CHUNK_SIZE));
-        before >>= CHUNK_SIZE;
-    }
-
-    std::vector<uint16_t> after_res;
-    for (size_t i = 0; i < INIT_PRECISION / CHUNK_SIZE; ++i){
-        after *= (1 << CHUNK_SIZE);
-        uint16_t cur = floor(after);
-        after -= cur;
-
-        after_res.push_back(cur);
-    }
-
-    std::reverse(after_res.begin(), after_res.end());
-
-    longnum res = longnum();
-    res.sign = sign;
-    res.precision = INIT_PRECISION;
-    res.chunks.insert(res.chunks.begin(), after_res.begin(), after_res.end());
-    res.chunks.insert(res.chunks.end(), before_res.begin(), before_res.end());
-
-    return res;
-}
-
-bool operator<(const longnum& lhs, const longnum& rhs) {
-    if (lhs.sign > rhs.sign){
-        return true;
-    }
-
-    if (lhs.sign < rhs.sign){
+    if (lhs.is_negative != rhs.is_negative) {
         return false;
     }
+    if (lhs.exp < rhs.exp) {
+        return lhs.with_precision(rhs.exp) == rhs;
+    }
+    if (lhs.exp > rhs.exp) {
+        return lhs == rhs.with_precision(lhs.exp);
+    }
+    return lhs.limbs == rhs.limbs;
+}
 
-    longnum a = lhs;
-    longnum b = rhs;
-    a.align(b);
-
-    for (int i = a.chunks.size()-1; i >= 0; i--){
-        if (a.chunks[i] != b.chunks[i]){
-            return (a.chunks[i] < b.chunks[i]) != a.sign;
+std::strong_ordering operator<=>(const LongNum& lhs, const LongNum& rhs) {
+    if (lhs.limbs.empty() && rhs.limbs.empty()) {  // lhs = rhs = 0
+        return std::strong_ordering::equal;
+    }
+    if (lhs.limbs.empty()) {  // lhs = 0
+        return rhs.is_negative ? std::strong_ordering::greater : std::strong_ordering::less;
+    }
+    if (rhs.limbs.empty()) {  // rhs = 0
+        return lhs.is_negative ? std::strong_ordering::less : std::strong_ordering::greater;
+    }
+    if (lhs.is_negative && !rhs.is_negative) {
+        return std::strong_ordering::less;
+    }
+    if (!lhs.is_negative && rhs.is_negative) {
+        return std::strong_ordering::greater;
+    }
+    if (lhs.exp < rhs.exp) {
+        return lhs.with_precision(rhs.exp) <=> rhs;
+    }
+    if (lhs.exp > rhs.exp) {
+        return lhs <=> rhs.with_precision(lhs.exp);
+    }
+    if (lhs.limbs.size() < rhs.limbs.size()) {
+        return lhs.is_negative ? std::strong_ordering::greater : std::strong_ordering::less;
+    }
+    if (lhs.limbs.size() > rhs.limbs.size()) {
+        return lhs.is_negative ? std::strong_ordering::less : std::strong_ordering::greater;
+    }
+    for (size_t i = 0; i < lhs.limbs.size(); i++) {
+        if (lhs.limbs[i] < rhs.limbs[i]) {
+            return lhs.is_negative ? std::strong_ordering::greater : std::strong_ordering::less;
+        }
+        if (lhs.limbs[i] > rhs.limbs[i]) {
+            return lhs.is_negative ? std::strong_ordering::less : std::strong_ordering::greater;
         }
     }
-
-    return false;
+    return std::strong_ordering::equal;
 }
 
-bool operator>(const longnum& lhs, const longnum& rhs) {
-    return rhs < lhs;
+LongNum LongNum::operator+() const {
+    return *this;
 }
 
-bool operator<=(const longnum& lhs, const longnum& rhs) {
-    return !(rhs < lhs);
+LongNum LongNum::operator-() const {
+    LongNum res(*this);
+    if (*this != 0) {  // -0 must be +0
+        res.is_negative ^= 1;
+    }
+    return res;
 }
 
-bool operator>=(const longnum& lhs, const longnum& rhs) {
-    return !(lhs < rhs);
+LongNum& LongNum::operator<<=(const unsigned shift) {
+    *this = *this << shift;
+    return *this;
 }
 
-bool operator!=(const longnum& lhs, const longnum& rhs) {
-    return (lhs < rhs) || (lhs < rhs);
+LongNum operator<<(const LongNum& number, const unsigned shift) {
+    if (!shift || number == 0) {
+        return number;
+    }
+    const unsigned zeros_cnt = (shift + BASE - 1) / BASE;
+    const unsigned r = shift % BASE;
+    std::vector<uint32_t> limbs(number.limbs.size() + zeros_cnt, 0);
+    for (size_t i = zeros_cnt; i < limbs.size(); i++) {
+        limbs[i] = number.limbs[i - zeros_cnt];
+    }
+    if (r) {
+        for (size_t i = zeros_cnt - 1; i < limbs.size() - 1; i++) {
+            limbs[i] = (limbs[i] >> (BASE - r)) | (limbs[i + 1] << r);
+        }
+        limbs.back() >>= BASE - r;
+    }
+    LongNum res(number.is_negative, number.exp, limbs);
+    res.remove_leading_zeros();
+    return res;
 }
 
-bool operator==(const longnum& lhs, const longnum& rhs) {
-    return !(lhs != rhs);
+LongNum& LongNum::operator>>=(const unsigned shift) {
+    *this = *this >> shift;
+    return *this;
 }
 
-longnum::longnum(uint16_t a){
-    this->chunks = std::vector<uint16_t>(INIT_PRECISION / CHUNK_SIZE + 1, 0);
-    this->chunks[INIT_PRECISION / CHUNK_SIZE] = a;
-    this->precision = INIT_PRECISION;
-    this->sign = 0;
+LongNum operator>>(const LongNum& number, const unsigned shift) {
+    if (!shift || number == 0) {
+        return number;
+    }
+    const unsigned to_erase = shift / BASE;
+    if (to_erase >= number.limbs.size()) {
+        return (0_longnum).with_precision(number.exp);
+    }
+    std::vector<uint32_t> limbs(number.limbs.size() - to_erase);
+    const unsigned r = shift % BASE;
+    for (size_t i = 0; i < limbs.size(); i++) {
+        limbs[i] = number.limbs[i + to_erase];
+    }
+    if (r) {
+        for (size_t i = 0; i < limbs.size() - 1; i++) {
+            limbs[i] = (limbs[i] >> r) | (limbs[i + 1] << (BASE - r));
+        }
+        limbs.back() >>= r;
+    }
+    LongNum res(number.is_negative, number.exp, limbs);
+    res.remove_leading_zeros();
+    return res;
+}
+
+LongNum& LongNum::operator+=(const LongNum& rhs) {
+    if (*this == 0) {
+        *this = rhs.with_precision(std::max(exp, rhs.exp));
+        return *this;
+    }
+    if (rhs == 0) {
+        set_precision(std::max(exp, rhs.exp));
+        return *this;
+    }
+    if (is_negative != rhs.is_negative) {
+        *this -= -rhs;
+        return *this;
+    }
+    if (exp < rhs.exp) {
+        set_precision(rhs.exp);
+    } else if (exp > rhs.exp) {
+        *this += rhs.with_precision(exp);  // recursive call, this can only happen once
+        return *this;
+    }
+    unsigned carry = 0;
+    for (size_t i = 0; i < std::max(limbs.size(), rhs.limbs.size()) || carry; i++) {
+        if (i == limbs.size()) {
+            limbs.push_back(0);
+        }
+        const uint64_t sum = (uint64_t)limbs[i] + carry + (i < rhs.limbs.size() ? rhs.limbs[i] : 0);
+        limbs[i] = sum;
+        carry = sum >> BASE;
+    }
+    return *this;
+}
+
+LongNum operator+(LongNum lhs, const LongNum& rhs) {
+    lhs += rhs;
+    return lhs;
+}
+
+LongNum& LongNum::operator-=(const LongNum& rhs) {
+    if (rhs == 0) {
+        set_precision(std::max(exp, rhs.exp));
+        return *this;
+    }
+    if (*this == rhs) {
+        *this = (0_longnum).with_precision(std::max(exp, rhs.exp));
+        return *this;
+    }
+    if (is_negative != rhs.is_negative) {
+        *this += -rhs;
+        return *this;
+    }
+    if ((*this < rhs) ^ is_negative) {  // handle cases like -1 - (-2) and 1 - 2
+        *this = -(rhs - *this);
+        return *this;
+    }
+    if (exp < rhs.exp) {
+        set_precision(rhs.exp);
+    } else if (exp > rhs.exp) {
+        *this -= rhs.with_precision(exp);  // recursive call, this can only happen once
+        return *this;
+    }
+    unsigned carry = 0;
+    for (size_t i = 0; i < rhs.limbs.size() || carry; i++) {
+        if (i < rhs.limbs.size()) {
+            const unsigned new_carry = limbs[i] < rhs.limbs[i] || (limbs[i] == rhs.limbs[i] && carry);  // TODO: optimize carry calculation here
+            limbs[i] -= rhs.limbs[i] + carry;
+            carry = new_carry;
+        } else {
+            limbs[i] -= carry;
+            carry = (limbs[i] == UINT32_MAX);
+        }
+    }
+    remove_leading_zeros();
+    return *this;
+}
+
+LongNum operator-(LongNum lhs, const LongNum& rhs) {
+    lhs -= rhs;
+    return lhs;
+}
+
+LongNum& LongNum::operator*=(const LongNum& rhs) {
+    *this = *this * rhs;
+    return *this;
+}
+
+LongNum operator*(const LongNum& lhs, const LongNum& rhs) {
+    if (lhs == 0 || rhs == 0) {
+        return (0_longnum).with_precision(std::max(lhs.exp, rhs.exp));
+    }
+    LongNum res;
+    res.exp = lhs.exp + rhs.exp;
+    res.limbs.resize(lhs.limbs.size() + rhs.limbs.size());
+    for (size_t i = 0; i < lhs.limbs.size(); i++) {
+        uint32_t carry = 0;
+        for (size_t j = 0; j < rhs.limbs.size() || carry; j++) {
+            if (j < rhs.limbs.size()) {
+                const uint64_t cur = (uint64_t)lhs.limbs[i] * rhs.limbs[j] + res.limbs[i + j] + carry;
+                res.limbs[i + j] = cur;
+                carry = cur >> BASE;
+            } else {
+                res.limbs[i + j] += carry;
+                carry = 0;
+            }
+        }
+    }
+    res.remove_leading_zeros();
+    res.set_precision(std::max(lhs.exp, rhs.exp));
+    res.is_negative = lhs.is_negative ^ rhs.is_negative;
+    return res;
+}
+
+LongNum& LongNum::operator/=(const LongNum& rhs) {
+    *this = *this / rhs;
+    return *this;
+}
+
+LongNum operator/(LongNum lhs, const LongNum& rhs) {
+    auto div_one_digit = [](const LongNum& a, const LongNum& b, LongNum& res) {
+        // divide a / b as integers (ignoring exp and sign), len(b) = 1
+
+        res = a;
+        unsigned carry = 0;
+        for (size_t i = res.limbs.size() - 1; i != (size_t)-1; i--) {
+            const uint64_t cur = res.limbs[i] + ((uint64_t)carry << BASE);
+            res.limbs[i] = cur / b.limbs.front();
+            carry = cur - res.limbs[i] * b.limbs.front();
+        }
+    };
+
+    auto long_div = [](LongNum u_num, LongNum v_num, LongNum& res) {
+        // source: https://skanthak.hier-im-netz.de/division.html
+        // divide a / b as integers (ignoring exp and sign), a >= b, len(b) >= 2
+
+        const size_t m = u_num.limbs.size(), n = v_num.limbs.size();  // initial sizes
+        const unsigned s = std::countl_zero(v_num.limbs.back());  // normalization (make first bit of divisor set to 1)
+        u_num <<= s;
+        v_num <<= s;
+        std::vector<uint32_t>& u = u_num.limbs;
+        if (u.size() == m) {
+            u.push_back(0);
+        }
+        const std::vector<uint32_t>& v = v_num.limbs;
+
+        res.limbs.resize(m - n + 1);
+        std::vector<uint32_t>& q = res.limbs;
+        for (size_t j = m - n; j != (size_t)-1; j--) {
+            uint64_t qhat = (((uint64_t)u[j + n] << BASE) | u[j + n - 1]) / v[n - 1];
+            uint64_t rhat = (((uint64_t)u[j + n] << BASE) | u[j + n - 1]) - qhat * v[n - 1];
+            for (size_t i = 0; i < 2; i++) {
+                if (qhat >= (1ull << BASE) || qhat * v[n - 2] > ((rhat << BASE) | u[j + n - 2])) {
+                    qhat--;
+                    rhat += v[n - 1];
+                    if (rhat >= (1ull << BASE)) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+            int64_t t;
+            uint64_t carry = 0;
+            for (size_t i = 0; i < n; i++) {
+                const uint64_t prod = qhat * v[i];
+                t = (int64_t)(u[i + j] - carry - (prod & UINT32_MAX));
+                u[i + j] = t;
+                carry = (prod >> BASE) - (t >> BASE);
+            }
+            t = (int64_t)(u[j + n] - carry);
+            u[j + n] = t;
+
+            q[j] = qhat;
+            if (t < 0) {  // if we subtracted too much, add back
+                q[j]--;
+                carry = 0;
+                for (size_t i = 0; i < n; i++) {
+                    t = (int64_t)(u[i + j] + v[i] + carry);
+                    u[i + j] = t;
+                    carry = t >> BASE;
+                }
+                u[j + n] += carry;
+            }
+        }
+    };
+
+    if (rhs == 0) {
+        throw std::invalid_argument("Division by zero");
+    }
+    if (lhs == 0) {
+        return (0_longnum).with_precision(std::max(lhs.exp, rhs.exp));
+    }
+    if (lhs.exp < rhs.exp) {
+        lhs <<= 2 * rhs.exp - lhs.exp;
+    } else {
+        lhs <<= rhs.exp;
+    }
+    if (lhs.limbs.size() < rhs.limbs.size() ||
+        (lhs.limbs.size() == rhs.limbs.size() && lhs.limbs.back() < rhs.limbs.back())) {
+        return (0_longnum).with_precision(std::max(lhs.exp, rhs.exp));
+    }
+    LongNum res;
+    if (rhs.limbs.size() == 1) {
+        div_one_digit(lhs, rhs, res);
+    } else {
+        long_div(lhs, rhs, res);
+    }
+    res.exp = std::max(lhs.exp, rhs.exp);
+    res.is_negative = lhs.is_negative ^ rhs.is_negative;
+    res.remove_leading_zeros();
+    return res;
+}
+
+void LongNum::set_precision(const unsigned precision) {
+    if (exp < precision) {
+        *this <<= precision - exp;
+    } else if (exp > precision) {
+        *this >>= exp - precision;
+    }
+    exp = precision;
+}
+
+LongNum LongNum::with_precision(const unsigned precision) const {
+    if (exp < precision) {
+        LongNum res = *this << (precision - exp);
+        res.exp = precision;
+        return res;
+    }
+    if (exp > precision) {
+        LongNum res = *this >> (exp - precision);
+        res.exp = precision;
+        return res;
+    }
+    return *this;
+}
+
+void LongNum::remove_leading_zeros() {
+    while (!limbs.empty() && limbs.back() == 0) {
+        limbs.pop_back();
+    }
+    if (limbs.empty()) {
+        is_negative = false;
+    }
+}
+
+LongNum LongNum::truncate() const {
+    return this->with_precision(0);
+}
+
+LongNum LongNum::frac() const {
+    return *this - this->truncate();
+}
+
+void LongNum::shrink_to_fit() {
+    limbs.shrink_to_fit();
+}
+
+LongNum LongNum::pow(unsigned power) const {
+    LongNum res = 1, a = *this;
+    while (power) {
+        if (power & 1)
+            res *= a;
+        a *= a;
+        power >>= 1;
+    }
+    return res;
+}
+
+LongNum LongNum::sqrt() const {
+    if (*this < 0) {
+        throw std::invalid_argument("Square root of negative number is undefined");
+    }
+    LongNum x0 = 0, x1 = 1;
+    while (x0 != x1) {
+        x0 = x1;
+        x1 += *this / x1;
+        x1 >>= 1;
+    }
+    return x1;
+}
+
+std::string LongNum::to_binary_string() const {
+	if (*this == 0) {
+        return "0";
+    }
+    std::string res;
+    if (is_negative) {
+        res = "-";
+    }
+    for (uint32_t limb : limbs) {
+        for (unsigned j = 0; j < BASE; j++) {
+            res += std::to_string((limb >> j) & 1);
+        }
+    }
+    while (res.back() == '0' && res.length() > exp + 1) {
+        res.pop_back();
+    }
+    if (exp > 0) {
+        res.insert(res.begin() + exp, '.');
+    }
+    std::ranges::reverse(res);
+    return res;
+}
+
+LongNum LongNum::from_binary_string(std::string str) {
+    if (str.empty()) {
+        throw std::invalid_argument("Invalid string");
+    }
+    LongNum res;
+    const size_t point_pos = str.find_first_of(".,");
+    if (point_pos == std::string::npos) {
+        res.exp = 0;
+    } else {
+        res.exp = str.size() - point_pos - 1;
+        str.erase(str.begin() + point_pos);
+    }
+    if (str.find_first_of(".,") != std::string::npos) {
+        throw std::invalid_argument("Invalid string");
+    }
+    for (const auto c: str) {
+        if (c != '0' && c != '1') {
+            throw std::invalid_argument("Invalid string");
+        }
+    }
+    for (int i = (int)str.size() - 1; i >= 0; i -= BASE) {
+        res.limbs.push_back(0);
+        for (unsigned j = 0; j < std::min(BASE, (unsigned)i + 1); j++) {
+            if (str[i - j] == '1') {
+                res.limbs.back() |= (1 << j);
+            }
+        }
+    }
+    if (res.exp < DEFAULT_PRECISION) {
+        res.set_precision(DEFAULT_PRECISION);
+    }
+    return res;
+}
+
+std::string LongNum::to_string(unsigned decimal_precision) const {
+    const LongNum base = 10;  // TODO: make it work with any base
+    std::string res;
+    LongNum whole = this->truncate();
+    while (whole != 0) {
+        LongNum q = whole / base;
+        LongNum r = whole - q * base;
+        if (r == 0) {
+            res += '0';
+        } else {
+            res += std::to_string(r.limbs.front());
+        }
+        whole = q;
+    }
+    if (res.empty()) {
+        res += '0';
+    }
+    if (is_negative) {
+        res += '-';
+    }
+    std::ranges::reverse(res);
+    if (decimal_precision == 0) {
+        return res;
+    }
+    LongNum frac = this->frac();
+    if (frac == 0) {
+        return res;
+    }
+    res += '.';
+    unsigned cnt = 0;
+    while (frac != 0 && cnt++ < decimal_precision) {
+        frac *= base;
+        LongNum r = frac.truncate();
+        frac -= r;
+        if (r == 0) {
+            res += '0';
+        } else {
+            res += std::to_string(r.limbs.front());
+        }
+    }
+    return res;
+}
+
+LongNum LongNum::from_string(std::string str, const std::optional<unsigned>& precision) {
+    const LongNum base = 10;  // TODO: make it work with any base
+    if (str.empty()) {
+        throw std::invalid_argument("Invalid string");
+    }
+    LongNum res = 0;
+    if (str.front() == '-') {
+        str.erase(str.begin());
+        res.is_negative = true;
+    }
+    if (str.front() == '+') {
+        str.erase(str.begin());
+    }
+    const size_t point_pos = str.find_first_of(".,");
+    unsigned decimal_exp;
+    if (point_pos == std::string::npos) {
+        decimal_exp = 0;
+    } else {
+        decimal_exp = str.size() - point_pos - 1;
+        str.erase(str.begin() + point_pos);
+    }
+    if (str.find_first_of(".,") != std::string::npos) {
+        throw std::invalid_argument("Invalid string");
+    }
+    for (const auto c: str) {
+        if (c < '0' || c > '9') {
+            throw std::invalid_argument("Invalid string");
+        }
+    }
+    for (const auto digit: str) {
+        res *= base;
+        res += digit - '0';
+    }
+    if (decimal_exp == 0) {
+        res.set_precision(precision.value_or(0));
+    } else {
+        res.set_precision(precision.value_or(std::max(decimal_exp * 4, DEFAULT_PRECISION)));
+    }
+    res /= base.pow(decimal_exp);
+    return res;
+}
+
+LongNum operator""_longnum(const long double number) {
+    return LongNum::from_string(std::to_string(number));
+}
+
+LongNum operator""_longnum(const unsigned long long number) {
+    return LongNum(number);
+}
+
+LongNum operator""_longnum(const char* number, std::size_t len) {
+    return LongNum::from_string(std::string(number, len));
+};
+
+std::istream& operator>>(std::istream& stream, LongNum& number) {
+    std::string str;
+    stream >> str;
+    number = LongNum::from_string(str);
+    return stream;
+}
+
+std::ostream& operator<<(std::ostream& stream, const LongNum& number) {
+    return stream << number.to_string();
 }

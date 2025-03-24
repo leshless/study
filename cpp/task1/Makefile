@@ -1,31 +1,51 @@
-CC=g++
-CFLAGS=-c
-LDFLAGS=
-BUILD_PATH=build
-SRC_PATH=src
+CXX = g++
 
-all: main
+CXXFLAGS += -std=c++23 -pedantic -Wall -Wextra -Werror
+LDFLAGS ?=
 
-test: tests
-	./tests
+BUILD_PATH ?= build
+
+RELEASE ?= 0
+ifeq ($(RELEASE), 0)
+	CXXFLAGS += -g
+else
+	CXXFLAGS += -O3 -flto -DNDEBUG
+endif
+
+COMPILE = $(CXX) $(CXXFLAGS)
+LINK = $(CXX) $(LDFLAGS)
+
+all: $(BUILD_PATH)/longnum.o
+
+PRECISION ?= 100
+pi: $(BUILD_PATH)/calculate-pi
+	$(BUILD_PATH)/calculate-pi $(PRECISION)
+
+test: $(BUILD_PATH)/tests
+	$(BUILD_PATH)/tests
 
 $(BUILD_PATH):
-	mkdir -p $(BUILD_PATH)
+	@mkdir -p $(BUILD_PATH)
 
-main: main.o longnum.o | $(BUILD_PATH)
-	$(CC) $(BUILD_PATH)/main.o $(BUILD_PATH)/longnum.o -o main
+$(BUILD_PATH)/calculate-pi: $(BUILD_PATH)/calculate-pi.o $(BUILD_PATH)/longnum.o | $(BUILD_PATH)
+	$(LINK) $^ -o $@
 
-tests: test.o longnum.o | $(BUILD_PATH)
-	$(CC) $(BUILD_PATH)/test.o $(BUILD_PATH)/longnum.o -o tests
+$(BUILD_PATH)/longnum.o: src/longnum.cpp src/longnum.hpp | $(BUILD_PATH)
+	$(COMPILE) $< -c -o $@
 
-longnum.o: $(SRC_PATH)/longnum.cpp | $(BUILD_PATH)
-	$(CC) $(CFLAGS) $(SRC_PATH)/longnum.cpp -o $(BUILD_PATH)/longnum.o
+$(BUILD_PATH)/calculate-pi.o: src/calculate-pi.cpp src/longnum.hpp | $(BUILD_PATH)
+	$(COMPILE) $< -c -o $@
 
-test.o: $(SRC_PATH)/test.cpp | $(BUILD_PATH)
-	$(CC) $(CFLAGS) $(SRC_PATH)/test.cpp -o $(BUILD_PATH)/test.o
+$(BUILD_PATH)/tests: $(BUILD_PATH)/tests.o $(BUILD_PATH)/tester.o $(BUILD_PATH)/longnum.o | $(BUILD_PATH)
+	$(LINK) $^ -o $@
 
-main.o: $(SRC_PATH)/main.cpp | $(BUILD_PATH)
-	$(CC) $(CFLAGS) $(SRC_PATH)/main.cpp -o $(BUILD_PATH)/main.o
+$(BUILD_PATH)/tester.o: tests/tester.cpp tests/tester.hpp | $(BUILD_PATH)
+	$(COMPILE) $< -c -o $@
+
+$(BUILD_PATH)/tests.o: tests/tests.cpp tests/tester.hpp src/longnum.hpp | $(BUILD_PATH)
+	$(COMPILE) $< -c -o $@
 
 clean:
-	rm -rf $(BUILD_PATH)/main
+	rm -rf $(BUILD_PATH)
+
+.PHONY: all pi test clean

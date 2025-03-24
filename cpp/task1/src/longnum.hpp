@@ -1,44 +1,79 @@
-#include <string>
+#ifndef LONGNUM_HPP
+#define LONGNUM_HPP
+
+#include <iostream>
 #include <vector>
+#include <string>
+#include <cinttypes>
+#include <climits>
+#include <optional>
+#include <compare>
 
-class longnum {
-private:
-    std::vector<uint16_t> chunks;
-    size_t precision;
-    bool sign;
+class LongNum {
+    bool is_negative = false;
+    unsigned exp = 0;
+    std::vector<uint32_t> limbs;
 
-    void resize(size_t new_size);
-    void lshift(size_t offset);
-    void rshift(size_t offset);
-    void align(longnum &other);
-    bool less_abs(const longnum &other);
-    bool is_zero();
-    void pretify(void);
-    longnum floor();
-    void print_chunks();
+    LongNum(bool _is_negative, unsigned _exp, std::vector<uint32_t>& _limbs);
+
+    void remove_leading_zeros();
+
 public:
-    void set_precision(size_t new_precision);
-    std::string to_string();
+    LongNum() = default;
+    LongNum(const LongNum& other) = default;
+    explicit LongNum(unsigned long long x);
+    LongNum(long long x);
 
-    longnum& operator=(const longnum& other) = default;
+    ~LongNum() = default;
 
-    friend longnum operator-(const longnum& num);
-    friend longnum operator+(const longnum& lhs, const longnum& rhs);
-    friend longnum operator-(const longnum& lhs, const longnum& rhs);
-    friend longnum operator*(const longnum& lhs, const longnum& rhs);
-    friend longnum operator/(longnum lhs, longnum rhs);
+    LongNum& operator=(const LongNum& other) = default;
 
-    friend bool operator<(const longnum& lhs, const longnum& rhs);
-    friend bool operator>(const longnum& lhs, const longnum& rhs);
-    friend bool operator<=(const longnum& lhs, const longnum& rhs);
-    friend bool operator>=(const longnum& lhs, const longnum& rhs);
-    friend bool operator!=(const longnum& lhs, const longnum& rhs);
-    friend bool operator==(const longnum& lhs, const longnum& rhs);
-    friend longnum operator""_ln(long double number);
-    
-    longnum() = default;
-    longnum(uint16_t a);
-    ~longnum() = default;
+    friend bool operator==(const LongNum& lhs, const LongNum& rhs);
+    friend std::strong_ordering operator<=>(const LongNum& lhs, const LongNum& rhs);
+
+    LongNum operator+() const;
+    LongNum operator-() const;
+
+    LongNum& operator<<=(unsigned shift);
+    friend LongNum operator<<(const LongNum& number, unsigned shift);
+
+    LongNum& operator>>=(unsigned shift);
+    friend LongNum operator>>(const LongNum& number, unsigned shift);
+
+    LongNum& operator+=(const LongNum& rhs);
+    friend LongNum operator+(LongNum lhs, const LongNum& rhs);
+
+    LongNum& operator-=(const LongNum& rhs);
+    friend LongNum operator-(LongNum lhs, const LongNum& rhs);
+
+    LongNum& operator*=(const LongNum& rhs);
+    friend LongNum operator*(const LongNum& lhs, const LongNum& rhs);
+
+    LongNum& operator/=(const LongNum& rhs);
+    friend LongNum operator/(LongNum lhs, const LongNum& rhs);
+
+    void set_precision(unsigned precision);
+    LongNum with_precision(unsigned precision) const;
+
+    LongNum truncate() const;
+    LongNum frac() const;
+    void shrink_to_fit();
+
+    LongNum pow(unsigned power) const;
+    LongNum sqrt() const;
+
+    std::string to_binary_string() const;
+    static LongNum from_binary_string(std::string str);
+
+    std::string to_string(unsigned decimal_precision = UINT_MAX) const;
+    static LongNum from_string(std::string str, const std::optional<unsigned>& precision = std::nullopt);
 };
 
-longnum operator""_ln(long double number);
+LongNum operator""_longnum(unsigned long long number);
+LongNum operator""_longnum(long double number);
+LongNum operator""_longnum(const char* number, std::size_t len);
+
+std::istream& operator>>(std::istream& stream, LongNum& number);
+std::ostream& operator<<(std::ostream& stream, const LongNum& number);
+
+#endif
