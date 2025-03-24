@@ -9,10 +9,10 @@
 constexpr unsigned BASE = 32;
 constexpr unsigned DEFAULT_PRECISION = 64;
 
-LongNum::LongNum(const bool _is_negative, const unsigned _exp, std::vector<uint32_t>& _limbs)
-    : is_negative(_is_negative),
+LongNum::LongNum(const bool _sign, const unsigned _exp, std::vector<uint32_t>& _chunks)
+    : sign(_sign),
       exp(_exp),
-      limbs(std::move(_limbs)) {
+      chunks(std::move(_chunks)) {
 }
 
 LongNum::LongNum(unsigned long long x) {
@@ -20,7 +20,7 @@ LongNum::LongNum(unsigned long long x) {
         return;
     }
     while (x) {
-        limbs.push_back(x & UINT32_MAX);
+        chunks.push_back(x & UINT32_MAX);
         x >>= BASE;
     }
 }
@@ -29,19 +29,19 @@ LongNum::LongNum(long long x) {
     if (x == 0) {
         return;
     }
-    is_negative = x < 0;
+    sign = x < 0;
     x = std::abs(x);
     while (x) {
-        limbs.push_back(x & UINT32_MAX);
+        chunks.push_back(x & UINT32_MAX);
         x >>= BASE;
     }
 }
 
 bool operator==(const LongNum& lhs, const LongNum& rhs) {
-    if (lhs.limbs.empty() || rhs.limbs.empty()) {  // when lhs = 0 or rhs = 0
-        return lhs.limbs.empty() && rhs.limbs.empty();
+    if (lhs.chunks.empty() || rhs.chunks.empty()) {  // when lhs = 0 or rhs = 0
+        return lhs.chunks.empty() && rhs.chunks.empty();
     }
-    if (lhs.is_negative != rhs.is_negative) {
+    if (lhs.sign != rhs.sign) {
         return false;
     }
     if (lhs.exp < rhs.exp) {
@@ -50,23 +50,23 @@ bool operator==(const LongNum& lhs, const LongNum& rhs) {
     if (lhs.exp > rhs.exp) {
         return lhs == rhs.with_precision(lhs.exp);
     }
-    return lhs.limbs == rhs.limbs;
+    return lhs.chunks == rhs.chunks;
 }
 
 std::strong_ordering operator<=>(const LongNum& lhs, const LongNum& rhs) {
-    if (lhs.limbs.empty() && rhs.limbs.empty()) {  // lhs = rhs = 0
+    if (lhs.chunks.empty() && rhs.chunks.empty()) {  // lhs = rhs = 0
         return std::strong_ordering::equal;
     }
-    if (lhs.limbs.empty()) {  // lhs = 0
-        return rhs.is_negative ? std::strong_ordering::greater : std::strong_ordering::less;
+    if (lhs.chunks.empty()) {  // lhs = 0
+        return rhs.sign ? std::strong_ordering::greater : std::strong_ordering::less;
     }
-    if (rhs.limbs.empty()) {  // rhs = 0
-        return lhs.is_negative ? std::strong_ordering::less : std::strong_ordering::greater;
+    if (rhs.chunks.empty()) {  // rhs = 0
+        return lhs.sign ? std::strong_ordering::less : std::strong_ordering::greater;
     }
-    if (lhs.is_negative && !rhs.is_negative) {
+    if (lhs.sign && !rhs.sign) {
         return std::strong_ordering::less;
     }
-    if (!lhs.is_negative && rhs.is_negative) {
+    if (!lhs.sign && rhs.sign) {
         return std::strong_ordering::greater;
     }
     if (lhs.exp < rhs.exp) {
@@ -75,18 +75,18 @@ std::strong_ordering operator<=>(const LongNum& lhs, const LongNum& rhs) {
     if (lhs.exp > rhs.exp) {
         return lhs <=> rhs.with_precision(lhs.exp);
     }
-    if (lhs.limbs.size() < rhs.limbs.size()) {
-        return lhs.is_negative ? std::strong_ordering::greater : std::strong_ordering::less;
+    if (lhs.chunks.size() < rhs.chunks.size()) {
+        return lhs.sign ? std::strong_ordering::greater : std::strong_ordering::less;
     }
-    if (lhs.limbs.size() > rhs.limbs.size()) {
-        return lhs.is_negative ? std::strong_ordering::less : std::strong_ordering::greater;
+    if (lhs.chunks.size() > rhs.chunks.size()) {
+        return lhs.sign ? std::strong_ordering::less : std::strong_ordering::greater;
     }
-    for (size_t i = 0; i < lhs.limbs.size(); i++) {
-        if (lhs.limbs[i] < rhs.limbs[i]) {
-            return lhs.is_negative ? std::strong_ordering::greater : std::strong_ordering::less;
+    for (size_t i = 0; i < lhs.chunks.size(); i++) {
+        if (lhs.chunks[i] < rhs.chunks[i]) {
+            return lhs.sign ? std::strong_ordering::greater : std::strong_ordering::less;
         }
-        if (lhs.limbs[i] > rhs.limbs[i]) {
-            return lhs.is_negative ? std::strong_ordering::less : std::strong_ordering::greater;
+        if (lhs.chunks[i] > rhs.chunks[i]) {
+            return lhs.sign ? std::strong_ordering::less : std::strong_ordering::greater;
         }
     }
     return std::strong_ordering::equal;
@@ -99,7 +99,7 @@ LongNum LongNum::operator+() const {
 LongNum LongNum::operator-() const {
     LongNum res(*this);
     if (*this != 0) {  // -0 must be +0
-        res.is_negative ^= 1;
+        res.sign ^= 1;
     }
     return res;
 }
@@ -115,17 +115,17 @@ LongNum operator<<(const LongNum& number, const unsigned shift) {
     }
     const unsigned zeros_cnt = (shift + BASE - 1) / BASE;
     const unsigned r = shift % BASE;
-    std::vector<uint32_t> limbs(number.limbs.size() + zeros_cnt, 0);
-    for (size_t i = zeros_cnt; i < limbs.size(); i++) {
-        limbs[i] = number.limbs[i - zeros_cnt];
+    std::vector<uint32_t> chunks(number.chunks.size() + zeros_cnt, 0);
+    for (size_t i = zeros_cnt; i < chunks.size(); i++) {
+        chunks[i] = number.chunks[i - zeros_cnt];
     }
     if (r) {
-        for (size_t i = zeros_cnt - 1; i < limbs.size() - 1; i++) {
-            limbs[i] = (limbs[i] >> (BASE - r)) | (limbs[i + 1] << r);
+        for (size_t i = zeros_cnt - 1; i < chunks.size() - 1; i++) {
+            chunks[i] = (chunks[i] >> (BASE - r)) | (chunks[i + 1] << r);
         }
-        limbs.back() >>= BASE - r;
+        chunks.back() >>= BASE - r;
     }
-    LongNum res(number.is_negative, number.exp, limbs);
+    LongNum res(number.sign, number.exp, chunks);
     res.remove_leading_zeros();
     return res;
 }
@@ -140,21 +140,21 @@ LongNum operator>>(const LongNum& number, const unsigned shift) {
         return number;
     }
     const unsigned to_erase = shift / BASE;
-    if (to_erase >= number.limbs.size()) {
+    if (to_erase >= number.chunks.size()) {
         return (0_longnum).with_precision(number.exp);
     }
-    std::vector<uint32_t> limbs(number.limbs.size() - to_erase);
+    std::vector<uint32_t> chunks(number.chunks.size() - to_erase);
     const unsigned r = shift % BASE;
-    for (size_t i = 0; i < limbs.size(); i++) {
-        limbs[i] = number.limbs[i + to_erase];
+    for (size_t i = 0; i < chunks.size(); i++) {
+        chunks[i] = number.chunks[i + to_erase];
     }
     if (r) {
-        for (size_t i = 0; i < limbs.size() - 1; i++) {
-            limbs[i] = (limbs[i] >> r) | (limbs[i + 1] << (BASE - r));
+        for (size_t i = 0; i < chunks.size() - 1; i++) {
+            chunks[i] = (chunks[i] >> r) | (chunks[i + 1] << (BASE - r));
         }
-        limbs.back() >>= r;
+        chunks.back() >>= r;
     }
-    LongNum res(number.is_negative, number.exp, limbs);
+    LongNum res(number.sign, number.exp, chunks);
     res.remove_leading_zeros();
     return res;
 }
@@ -168,7 +168,7 @@ LongNum& LongNum::operator+=(const LongNum& rhs) {
         set_precision(std::max(exp, rhs.exp));
         return *this;
     }
-    if (is_negative != rhs.is_negative) {
+    if (sign != rhs.sign) {
         *this -= -rhs;
         return *this;
     }
@@ -179,12 +179,12 @@ LongNum& LongNum::operator+=(const LongNum& rhs) {
         return *this;
     }
     unsigned carry = 0;
-    for (size_t i = 0; i < std::max(limbs.size(), rhs.limbs.size()) || carry; i++) {
-        if (i == limbs.size()) {
-            limbs.push_back(0);
+    for (size_t i = 0; i < std::max(chunks.size(), rhs.chunks.size()) || carry; i++) {
+        if (i == chunks.size()) {
+            chunks.push_back(0);
         }
-        const uint64_t sum = (uint64_t)limbs[i] + carry + (i < rhs.limbs.size() ? rhs.limbs[i] : 0);
-        limbs[i] = sum;
+        const uint64_t sum = (uint64_t)chunks[i] + carry + (i < rhs.chunks.size() ? rhs.chunks[i] : 0);
+        chunks[i] = sum;
         carry = sum >> BASE;
     }
     return *this;
@@ -204,11 +204,11 @@ LongNum& LongNum::operator-=(const LongNum& rhs) {
         *this = (0_longnum).with_precision(std::max(exp, rhs.exp));
         return *this;
     }
-    if (is_negative != rhs.is_negative) {
+    if (sign != rhs.sign) {
         *this += -rhs;
         return *this;
     }
-    if ((*this < rhs) ^ is_negative) {  // handle cases like -1 - (-2) and 1 - 2
+    if ((*this < rhs) ^ sign) {  // handle cases like -1 - (-2) and 1 - 2
         *this = -(rhs - *this);
         return *this;
     }
@@ -219,14 +219,14 @@ LongNum& LongNum::operator-=(const LongNum& rhs) {
         return *this;
     }
     unsigned carry = 0;
-    for (size_t i = 0; i < rhs.limbs.size() || carry; i++) {
-        if (i < rhs.limbs.size()) {
-            const unsigned new_carry = limbs[i] < rhs.limbs[i] || (limbs[i] == rhs.limbs[i] && carry);  // TODO: optimize carry calculation here
-            limbs[i] -= rhs.limbs[i] + carry;
+    for (size_t i = 0; i < rhs.chunks.size() || carry; i++) {
+        if (i < rhs.chunks.size()) {
+            const unsigned new_carry = chunks[i] < rhs.chunks[i] || (chunks[i] == rhs.chunks[i] && carry);  // TODO: optimize carry calculation here
+            chunks[i] -= rhs.chunks[i] + carry;
             carry = new_carry;
         } else {
-            limbs[i] -= carry;
-            carry = (limbs[i] == UINT32_MAX);
+            chunks[i] -= carry;
+            carry = (chunks[i] == UINT32_MAX);
         }
     }
     remove_leading_zeros();
@@ -249,23 +249,23 @@ LongNum operator*(const LongNum& lhs, const LongNum& rhs) {
     }
     LongNum res;
     res.exp = lhs.exp + rhs.exp;
-    res.limbs.resize(lhs.limbs.size() + rhs.limbs.size());
-    for (size_t i = 0; i < lhs.limbs.size(); i++) {
+    res.chunks.resize(lhs.chunks.size() + rhs.chunks.size());
+    for (size_t i = 0; i < lhs.chunks.size(); i++) {
         uint32_t carry = 0;
-        for (size_t j = 0; j < rhs.limbs.size() || carry; j++) {
-            if (j < rhs.limbs.size()) {
-                const uint64_t cur = (uint64_t)lhs.limbs[i] * rhs.limbs[j] + res.limbs[i + j] + carry;
-                res.limbs[i + j] = cur;
+        for (size_t j = 0; j < rhs.chunks.size() || carry; j++) {
+            if (j < rhs.chunks.size()) {
+                const uint64_t cur = (uint64_t)lhs.chunks[i] * rhs.chunks[j] + res.chunks[i + j] + carry;
+                res.chunks[i + j] = cur;
                 carry = cur >> BASE;
             } else {
-                res.limbs[i + j] += carry;
+                res.chunks[i + j] += carry;
                 carry = 0;
             }
         }
     }
     res.remove_leading_zeros();
     res.set_precision(std::max(lhs.exp, rhs.exp));
-    res.is_negative = lhs.is_negative ^ rhs.is_negative;
+    res.sign = lhs.sign ^ rhs.sign;
     return res;
 }
 
@@ -280,10 +280,10 @@ LongNum operator/(LongNum lhs, const LongNum& rhs) {
 
         res = a;
         unsigned carry = 0;
-        for (size_t i = res.limbs.size() - 1; i != (size_t)-1; i--) {
-            const uint64_t cur = res.limbs[i] + ((uint64_t)carry << BASE);
-            res.limbs[i] = cur / b.limbs.front();
-            carry = cur - res.limbs[i] * b.limbs.front();
+        for (size_t i = res.chunks.size() - 1; i != (size_t)-1; i--) {
+            const uint64_t cur = res.chunks[i] + ((uint64_t)carry << BASE);
+            res.chunks[i] = cur / b.chunks.front();
+            carry = cur - res.chunks[i] * b.chunks.front();
         }
     };
 
@@ -291,18 +291,18 @@ LongNum operator/(LongNum lhs, const LongNum& rhs) {
         // source: https://skanthak.hier-im-netz.de/division.html
         // divide a / b as integers (ignoring exp and sign), a >= b, len(b) >= 2
 
-        const size_t m = u_num.limbs.size(), n = v_num.limbs.size();  // initial sizes
-        const unsigned s = std::countl_zero(v_num.limbs.back());  // normalization (make first bit of divisor set to 1)
+        const size_t m = u_num.chunks.size(), n = v_num.chunks.size();  // initial sizes
+        const unsigned s = std::countl_zero(v_num.chunks.back());  // normalization (make first bit of divisor set to 1)
         u_num <<= s;
         v_num <<= s;
-        std::vector<uint32_t>& u = u_num.limbs;
+        std::vector<uint32_t>& u = u_num.chunks;
         if (u.size() == m) {
             u.push_back(0);
         }
-        const std::vector<uint32_t>& v = v_num.limbs;
+        const std::vector<uint32_t>& v = v_num.chunks;
 
-        res.limbs.resize(m - n + 1);
-        std::vector<uint32_t>& q = res.limbs;
+        res.chunks.resize(m - n + 1);
+        std::vector<uint32_t>& q = res.chunks;
         for (size_t j = m - n; j != (size_t)-1; j--) {
             uint64_t qhat = (((uint64_t)u[j + n] << BASE) | u[j + n - 1]) / v[n - 1];
             uint64_t rhat = (((uint64_t)u[j + n] << BASE) | u[j + n - 1]) - qhat * v[n - 1];
@@ -353,18 +353,18 @@ LongNum operator/(LongNum lhs, const LongNum& rhs) {
     } else {
         lhs <<= rhs.exp;
     }
-    if (lhs.limbs.size() < rhs.limbs.size() ||
-        (lhs.limbs.size() == rhs.limbs.size() && lhs.limbs.back() < rhs.limbs.back())) {
+    if (lhs.chunks.size() < rhs.chunks.size() ||
+        (lhs.chunks.size() == rhs.chunks.size() && lhs.chunks.back() < rhs.chunks.back())) {
         return (0_longnum).with_precision(std::max(lhs.exp, rhs.exp));
     }
     LongNum res;
-    if (rhs.limbs.size() == 1) {
+    if (rhs.chunks.size() == 1) {
         div_one_digit(lhs, rhs, res);
     } else {
         long_div(lhs, rhs, res);
     }
     res.exp = std::max(lhs.exp, rhs.exp);
-    res.is_negative = lhs.is_negative ^ rhs.is_negative;
+    res.sign = lhs.sign ^ rhs.sign;
     res.remove_leading_zeros();
     return res;
 }
@@ -393,11 +393,11 @@ LongNum LongNum::with_precision(const unsigned precision) const {
 }
 
 void LongNum::remove_leading_zeros() {
-    while (!limbs.empty() && limbs.back() == 0) {
-        limbs.pop_back();
+    while (!chunks.empty() && chunks.back() == 0) {
+        chunks.pop_back();
     }
-    if (limbs.empty()) {
-        is_negative = false;
+    if (chunks.empty()) {
+        sign = false;
     }
 }
 
@@ -410,7 +410,7 @@ LongNum LongNum::frac() const {
 }
 
 void LongNum::shrink_to_fit() {
-    limbs.shrink_to_fit();
+    chunks.shrink_to_fit();
 }
 
 LongNum LongNum::pow(unsigned power) const {
@@ -442,10 +442,10 @@ std::string LongNum::to_binary_string() const {
         return "0";
     }
     std::string res;
-    if (is_negative) {
+    if (sign) {
         res = "-";
     }
-    for (uint32_t limb : limbs) {
+    for (uint32_t limb : chunks) {
         for (unsigned j = 0; j < BASE; j++) {
             res += std::to_string((limb >> j) & 1);
         }
@@ -481,10 +481,10 @@ LongNum LongNum::from_binary_string(std::string str) {
         }
     }
     for (int i = (int)str.size() - 1; i >= 0; i -= BASE) {
-        res.limbs.push_back(0);
+        res.chunks.push_back(0);
         for (unsigned j = 0; j < std::min(BASE, (unsigned)i + 1); j++) {
             if (str[i - j] == '1') {
-                res.limbs.back() |= (1 << j);
+                res.chunks.back() |= (1 << j);
             }
         }
     }
@@ -504,14 +504,14 @@ std::string LongNum::to_string(unsigned decimal_precision) const {
         if (r == 0) {
             res += '0';
         } else {
-            res += std::to_string(r.limbs.front());
+            res += std::to_string(r.chunks.front());
         }
         whole = q;
     }
     if (res.empty()) {
         res += '0';
     }
-    if (is_negative) {
+    if (sign) {
         res += '-';
     }
     std::ranges::reverse(res);
@@ -531,7 +531,7 @@ std::string LongNum::to_string(unsigned decimal_precision) const {
         if (r == 0) {
             res += '0';
         } else {
-            res += std::to_string(r.limbs.front());
+            res += std::to_string(r.chunks.front());
         }
     }
     return res;
@@ -545,7 +545,7 @@ LongNum LongNum::from_string(std::string str, const std::optional<unsigned>& pre
     LongNum res = 0;
     if (str.front() == '-') {
         str.erase(str.begin());
-        res.is_negative = true;
+        res.sign = true;
     }
     if (str.front() == '+') {
         str.erase(str.begin());
@@ -600,4 +600,27 @@ std::istream& operator>>(std::istream& stream, LongNum& number) {
 
 std::ostream& operator<<(std::ostream& stream, const LongNum& number) {
     return stream << number.to_string();
+}
+
+LongNum calculate_pi(const unsigned precision) {
+    LongNum k = 1;
+    LongNum a_k = (1_longnum).with_precision(precision);
+    LongNum a_sum = (1_longnum).with_precision(precision);
+    LongNum b_sum = 0;
+
+    const LongNum C = 640320;
+    const LongNum C3_OVER_24 = C.pow(3) / 24;
+
+    while (a_k != 0_longnum) {
+        a_k *= -(6 * k - 5) * (2 * k - 1) * (6 * k - 1);
+        a_k /= k.pow(3) * C3_OVER_24;
+        a_sum += a_k;
+        b_sum += k * a_k;
+        k += 1;
+    }
+
+    LongNum total = a_sum * 13591409 + b_sum * 545140134;
+    LongNum pi = (426880 * (10005_longnum).with_precision(precision).sqrt()) / total;
+    
+    return pi;
 }

@@ -10,11 +10,11 @@
 #include <compare>
 
 class LongNum {
-    bool is_negative = false;
+    bool sign = false;
     unsigned exp = 0;
-    std::vector<uint32_t> limbs;
+    std::vector<uint32_t> chunks;
 
-    LongNum(bool _is_negative, unsigned _exp, std::vector<uint32_t>& _limbs);
+    LongNum(bool _sign, unsigned _exp, std::vector<uint32_t>& _chunks);
 
     void remove_leading_zeros();
 
@@ -75,5 +75,7 @@ LongNum operator""_longnum(const char* number, std::size_t len);
 
 std::istream& operator>>(std::istream& stream, LongNum& number);
 std::ostream& operator<<(std::ostream& stream, const LongNum& number);
+
+LongNum calculate_pi(const unsigned precision);
 
 #endif
