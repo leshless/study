@@ -512,9 +512,65 @@
               "icon": "lucide-file",
               "title": "(19.03) Линейная алгебра"
             }
+          },
+          {
+            "id": "2960c4486e78cd26",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "algebra/(02.04) Линейные пространства.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "(02.04) Линейные пространства"
+            }
+          },
+          {
+            "id": "da06cb8e4ca33d38",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "algebra/(16.04) Квадратичные формы.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "(16.04) Квадратичные формы"
+            }
+          },
+          {
+            "id": "c17da9fbce6283f7",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "algebra/(23.04) Линейные отображения и операторы.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "(23.04) Линейные отображения и операторы"
+            }
+          },
+          {
+            "id": "43549556213747cf",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "algebra/(16.04) Квадратичные формы.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "(16.04) Квадратичные формы"
+            }
           }
         ],
-        "currentTab": 36
+        "currentTab": 40
       }
     ],
     "direction": "vertical"
@@ -667,8 +723,12 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "ca2345aa8ecceaf9",
+  "active": "43549556213747cf",
   "lastOpenFiles": [
+    "algebra/(02.04) Линейные пространства.md",
+    "algebra/(23.04) Линейные отображения и операторы.md",
+    "algebra/(16.04) Квадратичные формы.md",
+    "algebra/(25.09) Свойства определителя 1.md",
     "algebra/(12.03) Поля.md",
     "algebra/(19.03) Линейная алгебра.md",
     "algebra/(06.11) СЛАУ в общем виде.md",
@@ -691,10 +751,6 @@
     "discrete/(22.11) Теория чисел 3.md",
     "discrete/(10.01) Декартово произведение.md",
     "discrete/(17.01) Композиция.md",
-    "discrete/(24.01) Функции.md",
-    "discrete/(07.02) Свойства биекции.md",
-    "calculus/(28.02) Теорема о среднем.md",
-    "algebra/(19.02) Центр группы.md",
     "attachments/Pasted image 20240912130416.png",
     "attachments/Pasted image 20241023122726.png",
     "attachments/Pasted image 20241023122640.png",
