@@ -7,5 +7,7 @@
 
 *.exe
 .vscode
-input.txt
-output.txt
+*.o
+
+build/*
+!build/.keep
