@@ -5,9 +5,15 @@
 !Makefile
 !Dockerfile
 
-*.exe
-.vscode
 *.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
 
-build/*
-!build/.keep
+__pycache__
+.pytest_cache
+
+.vscode

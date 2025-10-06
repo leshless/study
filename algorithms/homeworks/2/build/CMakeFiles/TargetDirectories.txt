@@ -1,0 +1,5 @@
+/home/leshless/study/sophomore/algorithms/hw/2/build/CMakeFiles/queue_lib.dir
+/home/leshless/study/sophomore/algorithms/hw/2/build/CMakeFiles/queue_test.dir
+/home/leshless/study/sophomore/algorithms/hw/2/build/CMakeFiles/test.dir
+/home/leshless/study/sophomore/algorithms/hw/2/build/CMakeFiles/edit_cache.dir
+/home/leshless/study/sophomore/algorithms/hw/2/build/CMakeFiles/rebuild_cache.dir
