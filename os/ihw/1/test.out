@@ -1,0 +1,33 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.3, pytest-8.3.5, pluggy-1.5.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/leshless/study/os/ihw/1
+plugins: typeguard-4.4.2, timeout-2.3.1
+collecting ... collected 24 items
+
+main_test.py::TestSqrt::test_happy_path[numbers0] PASSED                 [  4%]
+main_test.py::TestSqrt::test_happy_path[numbers1] PASSED                 [  8%]
+main_test.py::TestSqrt::test_happy_path[numbers2] PASSED                 [ 12%]
+main_test.py::TestSqrt::test_happy_path[numbers3] PASSED                 [ 16%]
+main_test.py::TestSqrt::test_happy_path[numbers4] PASSED                 [ 20%]
+main_test.py::TestSqrt::test_happy_path[numbers5] PASSED                 [ 25%]
+main_test.py::TestSqrt::test_happy_path[numbers6] PASSED                 [ 29%]
+main_test.py::TestSqrt::test_happy_path[numbers7] PASSED                 [ 33%]
+main_test.py::TestSqrt::test_happy_path[numbers8] PASSED                 [ 37%]
+main_test.py::TestSqrt::test_happy_path[numbers9] PASSED                 [ 41%]
+main_test.py::TestSqrt::test_happy_path[numbers10] PASSED                [ 45%]
+main_test.py::TestSqrt::test_happy_path[numbers11] PASSED                [ 50%]
+main_test.py::TestSqrt::test_happy_path[numbers12] PASSED                [ 54%]
+main_test.py::TestSqrt::test_happy_path[numbers13] PASSED                [ 58%]
+main_test.py::TestSqrt::test_happy_path[numbers14] PASSED                [ 62%]
+main_test.py::TestSqrt::test_happy_path[numbers15] PASSED                [ 66%]
+main_test.py::TestSqrt::test_happy_path[numbers16] PASSED                [ 70%]
+main_test.py::TestSqrt::test_happy_path[numbers17] PASSED                [ 75%]
+main_test.py::TestSqrt::test_happy_path[numbers18] PASSED                [ 79%]
+main_test.py::TestSqrt::test_happy_path[numbers19] PASSED                [ 83%]
+main_test.py::TestSqrt::test_bad_length[-1-numbers0] PASSED              [ 87%]
+main_test.py::TestSqrt::test_bad_length[-1000-numbers1] PASSED           [ 91%]
+main_test.py::TestSqrt::test_bad_length[11-numbers2] PASSED              [ 95%]
+main_test.py::TestSqrt::test_bad_length[100-numbers3] PASSED             [100%]
+
+============================== 24 passed in 6.95s ==============================
