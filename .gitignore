@@ -1,10 +1,11 @@
+# Binaries
 *
-
 !*.*
 !*/
 !Makefile
 !Dockerfile
 
+# Object files
 *.o
 *.obj
 *.a
@@ -13,7 +14,10 @@
 *.dylib
 *.dll
 
+# Python caches 
 __pycache__
 .pytest_cache
 
+# IDE
 .vscode
+.idea

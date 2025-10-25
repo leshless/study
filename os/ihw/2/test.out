@@ -1,0 +1,31 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.3, pytest-8.3.5, pluggy-1.5.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/leshless/study/os/ihw/2
+plugins: typeguard-4.4.2, timeout-2.3.1
+collecting ... collected 22 items
+
+main_test.py::TestSqrt::test_happy_path[0.1-100] PASSED                  [  4%]
+main_test.py::TestSqrt::test_happy_path[0.01-50] PASSED                  [  9%]
+main_test.py::TestSqrt::test_happy_path[0.5-10] PASSED                   [ 13%]
+main_test.py::TestSqrt::test_happy_path[0.001-1000] PASSED               [ 18%]
+main_test.py::TestSqrt::test_happy_path[0.0-100] PASSED                  [ 22%]
+main_test.py::TestSqrt::test_happy_path[-0.1-100] PASSED                 [ 27%]
+main_test.py::TestSqrt::test_happy_path[0.1-0] PASSED                    [ 31%]
+main_test.py::TestSqrt::test_happy_path[0.1-1] PASSED                    [ 36%]
+main_test.py::TestSqrt::test_happy_path[0.05-2] PASSED                   [ 40%]
+main_test.py::TestSqrt::test_happy_path[0.01-1000] PASSED                [ 45%]
+main_test.py::TestSqrt::test_happy_path[-0.01-100] PASSED                [ 50%]
+main_test.py::TestSqrt::test_happy_path[0.2-50] PASSED                   [ 54%]
+main_test.py::TestSqrt::test_happy_path[-0.2-30] PASSED                  [ 59%]
+main_test.py::TestSqrt::test_happy_path[0.001-0] PASSED                  [ 63%]
+main_test.py::TestSqrt::test_happy_path[0.0-0] PASSED                    [ 68%]
+main_test.py::TestSqrt::test_bad_x_value[1.0-100] PASSED                 [ 72%]
+main_test.py::TestSqrt::test_bad_x_value[-1.0-100] PASSED                [ 77%]
+main_test.py::TestSqrt::test_bad_x_value[100000.0-100] PASSED            [ 81%]
+main_test.py::TestSqrt::test_bad_x_value[-100000.0-100] PASSED           [ 86%]
+main_test.py::TestSqrt::test_bad_m_value[0.2--50] PASSED                 [ 90%]
+main_test.py::TestSqrt::test_bad_m_value[-0.2--30] PASSED                [ 95%]
+main_test.py::TestSqrt::test_bad_m_value[0.001--1] PASSED                [100%]
+
+============================= 22 passed in 14.93s ==============================
