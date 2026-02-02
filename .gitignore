@@ -4,6 +4,7 @@
 !*/
 !Makefile
 !Dockerfile
+!LICENSE
 
 # Object files
 *.o
@@ -17,6 +18,7 @@
 # Python caches 
 __pycache__
 .pytest_cache
+venv/
 
 # IDE
 .vscode

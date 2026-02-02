@@ -1,0 +1,1 @@
+INSERT INTO submissions(id, work_name, student_name, object_id, created_time) VALUES($1, $2, $3, $4, $5);

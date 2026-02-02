@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package api.v1;
+
+option go_package = "swe3/file_storer/api/grpc;grpc";
+
+message Submission {
+  string ID = 1;
+  string WorkName = 2;
+  string StudentName = 3;
+  bytes File = 4;
+  google.protobuf.Timestamp CreationTime = 5;
+}
+
+service Submissions {
+  rpc ListWorkSubmissions(ListWorkSubmissionsRequest) returns (ListWorkSubmissionsResponse);
+}
+
+message ListWorkSubmissionsRequest {
+  string WorkName = 1;
+}
+
+message ListWorkSubmissionsResponse {
+  repeated Submission Submissions = 1;
+}

@@ -1,0 +1,148 @@
+openapi: 3.0.3
+info:
+  title: API Анализа файлов
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:80
+    description: Локальное окружение
+
+tags:
+  - name: Reports
+    description: Управление отчетами
+
+paths:
+  /works/{workName}/submissions/{submissionID}/reports:
+    post:
+      tags:
+        - Reports
+      summary: Создание отчета по работе
+      description: |
+      operationId: CreateReport
+      parameters:
+        - name: workName
+          in: path
+          description: Название работы
+          required: true
+          schema:
+            type: string
+            format: string
+        - name: submissionID
+          in: path
+          description: ID посылки
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Отчет создан
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/CreateReportResponse"
+        default:
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /works/{workName}/reports:
+    get:
+      tags:
+        - Reports
+      summary: Получение всех отчетов по работе
+      description: |
+      operationId: ListReports
+      parameters:
+        - name: workName
+          in: path
+          description: Название работы
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        "200":
+          description: Все отчеты по работе
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/ListReportsResponse"
+        default:
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    CreateReportResponse:
+        type: object
+        required:
+          - report
+        properties:
+          report:
+            $ref: "#/components/schemas/Report"
+    ListReportsResponse:
+        type: object
+        required:
+          - report
+        properties:
+          reports:
+            type: array
+            items:
+              $ref: "#/components/schemas/Report"
+            description: Отчеты по работе
+
+
+    Report:
+      type: object
+      required:
+        - id
+        - work_name
+        - submission_id
+        - originality_percent
+        - similar_submission_ids
+        - creation_time
+      properties:
+        id:
+          type: string
+          description: ID отчета
+          example: "d327c1bc-5e2c-428b-bc71-231f91be74ac"
+        work_name:
+          type: string
+          description: Название работы, по которой составлен отчет
+          example: "hse_se_course_work"
+        submission_id:
+          type: string
+          description: ID посылки, по которой составлен отчет
+          example: "d327c1bc-5e2c-428b-bc71-231f91be74ac"
+        originality_percent:
+          type: number
+          description: Процент оригинальности посылки
+          example: 85.5
+        similar_submission_ids:
+          type: array
+          items:
+            type: string
+          description: ID других посылок схожих с этой
+          example: [
+            "d327c1bc-5e2c-428b-bc71-231f91be74ac",
+            "69158c6b-251d-4834-985c-a15af25ba6d1"
+          ]
+        creation_time:
+          type: string
+          format: date-time
+          description: Время создания отчета
+          example: "2025-12-31T23:59:59Z"
+
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Человекочитаемое описание ошибки
+          example: "Internal server error"

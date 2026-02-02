@@ -1,0 +1,91 @@
+openapi: 3.0.3
+info:
+  title: API Хранилища файлов
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:80
+    description: Локальное окружение
+
+tags:
+  - name: Submissions
+    description: Загрузка и управление посылками
+
+paths:
+  /works/{workName}/submissions:
+    post:
+      tags:
+        - Submissions
+      summary: Загрузка посылки по работе
+      operationId: CreateSubmission
+      parameters:
+        - name: workName
+          in: path
+          description: Название работы
+          required: true
+          schema:
+            type: string
+            example: "hse_se_course_work"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - request
+                - file
+              properties:
+                request:
+                  $ref: "#/components/schemas/CreateSubmissionRequest"
+                file:
+                  description: Файл с работой в текстовом виде
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Посылка успешно загружена
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateSubmissionResponse"
+        default:
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    CreateSubmissionRequest:
+      description: Запрос с информацией о посылке
+      type: object
+      required:
+        - student_name
+      properties:
+        student_name:
+          type: string
+          description: Имя студента
+          example: "Глеб Лещук"
+        
+    CreateSubmissionResponse:
+      type: object
+      required:
+        - submission_id
+      properties:
+        submission_id:
+          type: string
+          description: ID присвоенный посылке
+          example: "d327c1bc-5e2c-428b-bc71-231f91be74ac"
+
+    Error:
+      type: object
+      required:
+          - code
+          - message
+      properties:
+        message:
+          type: string
+          description: Человекочитаемое описание ошибки
+          example: "Internal server error"

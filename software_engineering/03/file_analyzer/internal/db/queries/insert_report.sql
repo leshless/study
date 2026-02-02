@@ -1,0 +1,1 @@
+INSERT INTO reports(id, work_name, submission_id, originality_percent, similar_submission_ids, creation_time) VALUES($1, $2, $3, $4, $5, $6);

@@ -1,0 +1,1 @@
+SELECT * FROM submissions WHERE work_name = $1;

@@ -1,0 +1,119 @@
+services:
+  nginx:
+    image: nginx:1.24-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./misc/nginx/config.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - file_storer
+      - file_analyzer
+
+  file_storer:
+    build:
+      context: ./
+      dockerfile: ./file_storer/Dockerfile
+      tags:
+        - file_storer:latest
+    image: file_storer:latest
+    restart: no
+    volumes:
+      - "./logs:/var/log/file_storer/:rw"
+    depends_on:
+      file_storer_postgres:
+        condition: service_healthy
+      # file-storer-minio:
+      #   condition: service_healthy
+
+  file_storer_postgres:
+    image: postgres:15  
+    environment:
+      POSTGRES_DB: file_storer
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - file_storer_postgres_data:/var/lib/postgresql/data
+      - ./logs:/var/log/postgresql:rw
+      - ./misc/file_storer_postgres/init.sh:/docker-entrypoint-initdb.d/configure.sh:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d file_storer"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "none"
+
+  file-storer-minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: user
+      MINIO_ROOT_PASSWORD: password
+      MINIO_DEFAULT_BUCKETS: objects:public
+    volumes:
+      - file-storer-minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  file_analyzer:
+    build:
+      context: ./
+      dockerfile: ./file_analyzer/Dockerfile
+      tags:
+        - file_analyzer:latest
+    image: file_analyzer:latest
+    restart: no
+    volumes:
+      - "./logs:/var/log/file_analyzer/:rw"
+    depends_on:
+      file_analyzer_postgres:
+        condition: service_healthy
+
+  file_analyzer_postgres:
+    image: postgres:15  
+    environment:
+      POSTGRES_DB: file_analyzer
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - file_analyzer_postgres_data:/var/lib/postgresql/data
+      - ./logs:/var/log/postgresql:rw
+      - ./misc/file_analyzer_postgres/init.sh:/docker-entrypoint-initdb.d/configure.sh:ro
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d file_analyzer"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "none"
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      file_storer_postgres:
+        condition: service_healthy
+      file_analyzer_postgres:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  file_storer_postgres_data:
+  file-storer-minio_data:
+  file_analyzer_postgres_data:
+  pgadmin_data:
