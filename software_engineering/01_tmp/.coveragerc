@@ -1,0 +1,7 @@
+[run]
+source = src/swe_hw_1
+omit =
+    src/swe_hw_1/**/*_test.py
+    src/swe_hw_1/**/*__init__.py
+include =
+    src/swe_hw_1/**/*.py
